@@ -1,0 +1,115 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.185791602352437,
+      "y": 5.545221859674489
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 piece auto 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor pick up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 piece auto 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 piece auto 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor pick up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 piece auto 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 piece auto 6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor pick up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 piece auto 7"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
