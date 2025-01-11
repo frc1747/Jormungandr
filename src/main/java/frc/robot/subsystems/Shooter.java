@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import org.ejml.ops.FConvertArrays;
 
@@ -20,20 +23,21 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     shooting = new TalonFX(Constants.ShooterConstants.FRONT);
     shooting2 = new TalonFX(Constants.ShooterConstants.FRONT_TWO);
-    shooting.setNeutralMode(NeutralMode.Brake);
-    shooting2.setNeutralMode(NeutralMode.Brake);
+    shooting.setNeutralMode(NeutralModeValue.Brake);
+    shooting2.setNeutralMode(NeutralModeValue.Brake);
+    shooting.setselected
   }
 
   public void setShooterPower(double power) {
-    shooting.set(ControlMode.PercentOutput, power);
-    shooting2.set(ControlMode.PercentOutput, -power);
+    shooting.set(power);
+    shooting2.set(-power);
   }
   public double getPosition() {
-    return shooting.getSelectedSensorPosition();
+    return shooting.getPosition().getValueAsDouble();
   }
 
   public double getSpeed() {
-    return (shooting.getSelectedSensorVelocity()*600 ) /4096;
+    return (shooting.getVelocity().getValueAsDouble()*600 ) / 4096;
   }
   
   @Override

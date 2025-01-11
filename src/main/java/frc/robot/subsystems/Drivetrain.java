@@ -7,16 +7,18 @@ package frc.robot.subsystems;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkRelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -55,7 +57,7 @@ public class Drivetrain extends SubsystemBase {
     // Create an instance of the gyro, config its parameters, and zero it out, 
     // making whichever direction the robot is facing when robot code is initialized 0
     gyro = new Pigeon2(Constants.DrivetrainConstants.PIGEON_ID);
-    gyro.configFactoryDefault();
+    gyro.reset();
     zeroGyro();
     //speed = new ChassisSpeeds(0,0,0);
 
@@ -165,7 +167,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Rotation2d getYaw() {
-    return (Constants.DrivetrainConstants.invertGyro) ? Rotation2d.fromDegrees(180 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
+    return (Constants.DrivetrainConstants.invertGyro) ? Rotation2d.fromDegrees(180-gyro.getYaw().getValueAsDouble()) : Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
   }
 
   public void resetModulesToAbsolute() {
@@ -241,15 +243,15 @@ public class Drivetrain extends SubsystemBase {
     private Rotation2d angleOffset;
     private Rotation2d lastAngle;
 
-    private CANSparkMax angleMotor;
-    private CANSparkMax driveMotor;
+    private SparkMax angleMotor;
+    private SparkMax driveMotor;
 
     private RelativeEncoder driveEncoder;
     private RelativeEncoder integratedAngleEncoder;
     private CANCoder angleEncoder;
 
-    private SparkPIDController driveController;  // Deprecated from SparkMaxPIDController
-    private SparkPIDController angleController;
+    private SparkClosedLoopController driveController;  // Deprecated from SparkMaxPIDController
+    private SparkClosedLoopController angleController;
 
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.DrivetrainConstants.DRIVE_KS, Constants.DrivetrainConstants.DRIVE_KV, Constants.DrivetrainConstants.DRIVE_KA);
 
@@ -263,15 +265,15 @@ public class Drivetrain extends SubsystemBase {
       configAngleEncoder();
 
       // Angle Motor
-      angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
+      angleMotor = new SparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
       integratedAngleEncoder = angleMotor.getEncoder();
-      angleController = angleMotor.getPIDController();
+      angleController = angleMotor.getClosedLoopController();
       configAngleMotor();
 
       // Drive Motor
-      driveMotor = new CANSparkMax(moduleConstants.driveMotorID, MotorType.kBrushless);
+      driveMotor = new SparkMax(moduleConstants.driveMotorID, MotorType.kBrushless);
       driveEncoder = driveMotor.getEncoder();
-      driveController = driveMotor.getPIDController();
+      driveController = driveMotor.getClosedLoopController();
       configDriveMotor();
 
       lastAngle = getState().angle;
@@ -284,18 +286,24 @@ public class Drivetrain extends SubsystemBase {
     }
 
     private void configAngleMotor() {
-      angleMotor.restoreFactoryDefaults();
+      EncoderConfig encoderConfig = new EncoderConfig();
+      encoderConfig.positionConversionFactor(Constants.DrivetrainConstants.angleConversionFactor);
+
+      SparkMaxConfig config = new SparkMaxConfig();
+      config.smartCurrentLimit(Constants.DrivetrainConstants.angleContinuousCurrentLimit)
+        .idleMode(Constants.DrivetrainConstants.angleNeutralMode)
+        .inverted(Constants.DrivetrainConstants.angleMotorInvert)
+        .apply(encoderConfig)
+        .closedLoop.pidf(
+          Constants.DrivetrainConstants.ANGLE_KP, 
+          Constants.DrivetrainConstants.ANGLE_KI, 
+          Constants.DrivetrainConstants.ANGLE_KD, 
+          Constants.DrivetrainConstants.ANGLE_KF
+        );
+      angleMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      
+
       CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
-      angleMotor.setSmartCurrentLimit(Constants.DrivetrainConstants.angleContinuousCurrentLimit);
-      angleMotor.setInverted(Constants.DrivetrainConstants.angleMotorInvert);
-      angleMotor.setIdleMode(Constants.DrivetrainConstants.angleNeutralMode);
-      integratedAngleEncoder.setPositionConversionFactor(Constants.DrivetrainConstants.angleConversionFactor);
-      angleController.setP(Constants.DrivetrainConstants.ANGLE_KP);
-      angleController.setI(Constants.DrivetrainConstants.ANGLE_KI);
-      angleController.setD(Constants.DrivetrainConstants.ANGLE_KD);
-      angleController.setFF(Constants.DrivetrainConstants.ANGLE_KF);
-      angleMotor.enableVoltageCompensation(Constants.DrivetrainConstants.voltageComp);
-      angleMotor.burnFlash();
       resetToAbsolute();
     }
 
@@ -308,6 +316,7 @@ public class Drivetrain extends SubsystemBase {
       driveEncoder.setVelocityConversionFactor(Constants.DrivetrainConstants.driveConversionVelocityFactor);
       driveEncoder.setPositionConversionFactor(Constants.DrivetrainConstants.driveConversionPositionFactor);
       driveController.setP(Constants.DrivetrainConstants.DRIVE_KP);
+      driveController.set
       driveController.setI(Constants.DrivetrainConstants.DRIVE_KI);
       driveController.setD(Constants.DrivetrainConstants.DRIVE_KD);
       driveController.setFF(Constants.DrivetrainConstants.DRIVE_KF);

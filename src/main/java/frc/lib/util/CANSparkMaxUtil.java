@@ -1,7 +1,11 @@
 package frc.lib.util;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SignalsConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 /** Sets motor usage for a Spark Max motor controller */
 public class CANSparkMaxUtil {
@@ -25,30 +29,40 @@ public class CANSparkMaxUtil {
    *     constructed.
    * @param enableFollowing Whether to enable motor following.
    */
-  public static void setCANSparkMaxBusUsage(CANSparkMax motor, Usage usage, boolean enableFollowing) {
+  public static void setCANSparkMaxBusUsage(SparkMax motor, Usage usage, boolean enableFollowing) {
+    //SparkMaxConfig config = new SparkMaxConfig();
+    SignalsConfig config = new SignalsConfig();
+
     if (enableFollowing) {
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 10);
+      config
+        .appliedOutputPeriodMs(10);
     } else {
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500);
+      config
+        .appliedOutputPeriodMs(500);
     }
 
     if (usage == Usage.kAll) {
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 50);
+      config
+        .primaryEncoderVelocityPeriodMs(20)
+        .primaryEncoderPositionPeriodMs(20)
+        .analogVoltagePeriodMs(50);
     } else if (usage == Usage.kPositionOnly) {
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 500);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 500);
+      config
+        .primaryEncoderVelocityPeriodMs(500)
+        .primaryEncoderPositionPeriodMs(20)
+        .analogVoltagePeriodMs(500);
     } else if (usage == Usage.kVelocityOnly) {
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 500);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 500);
+      config
+        .primaryEncoderVelocityPeriodMs(20)
+        .primaryEncoderPositionPeriodMs(500)
+        .analogVoltagePeriodMs(500);
     } else if (usage == Usage.kMinimal) {
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 500);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 500);
-      motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 500);
+      config
+        .primaryEncoderVelocityPeriodMs(500)
+        .primaryEncoderPositionPeriodMs(500)
+        .analogVoltagePeriodMs(500);
     }
+    motor.configure(new SparkMaxConfig().apply(config), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   /**
@@ -63,7 +77,7 @@ public class CANSparkMaxUtil {
    * @param usage The status frame feedack to enable. kAll is the default when a CANSparkMax is
    *     constructed.
    */
-  public static void setCANSparkMaxBusUsage(CANSparkMax motor, Usage usage) {
+  public static void setCANSparkMaxBusUsage(SparkMax motor, Usage usage) {
     setCANSparkMaxBusUsage(motor, usage, false);
   }
 }

@@ -1,7 +1,12 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import java.util.function.BooleanSupplier;
 
@@ -21,76 +26,71 @@ public class PivotShooter extends SubsystemBase {
   /** Creates a new Shooter. */
   public PivotShooter() {
     hinge = new TalonFX(Constants.ShooterConstants.HINGE);
-    hinge.setNeutralMode(NeutralMode.Brake);
-    this.start =  hinge.getSelectedSensorPosition();
-    
-    configPID();
-  }
+    hinge.setNeutralMode(NeutralModeValue.Brake);
 
-  public void configPID() {
-    double[] pidf = new double[] {2, 0, 0, 0}; // was .40 18/4/2024
-    hinge.config_kP(0, pidf[0]);
-    hinge.config_kI(0, pidf[1]);
-    hinge.config_kD(0, pidf[2]);
-    hinge.config_kF(0, pidf[3]);
+    hinge.getConfigurator().apply(new TalonFXConfiguration()
+      .withSlot0(new Slot0Configs()
+        .withKP(2.0)
+        .withKI(0.0)
+        .withKD(0.0)
+        .withKA(getPosition()) // I don't know which feedforward type to use here
+      )
+      .withHardwareLimitSwitch(new HardwareLimitSwitchConfigs()
+        .withReverseLimitAutosetPositionValue(0.0)
+      )
+    );
+    this.start =  hinge.getPosition().getValueAsDouble();
   }
 
   public void setHingePower(double power) {
     if (getPosition() > Constants.ShooterConstants.UP_LIMIT && power >= 0)
-      hinge.set(ControlMode.PercentOutput, 0.0);
+      hinge.set(0.0);
     else
-      hinge.set(ControlMode.PercentOutput, power);
+      hinge.set(power);
   }
 
   public void dropShooter() {
-    hinge.set(ControlMode.Position, Constants.ShooterConstants.STOWED);
+    hinge.setPosition(Constants.ShooterConstants.STOWED);
   }
 
   public void alignShooterSpeaker() {
-    hinge.set(ControlMode.Position, 10.0);
+    hinge.setPosition(10.0);
   }
 
   public void goTo(double encoderPosition) {
-    hinge.set(ControlMode.Position, encoderPosition);
+    hinge.setPosition(encoderPosition);
   }
 
   public void alignShooterAmp() {
     // System.out.println("aligning");
     while (true) {
       if (getPosition() < Constants.ShooterConstants.AMP - 500) {
-        hinge.set(ControlMode.PercentOutput, 0.10);
+        hinge.set(0.10);
       } else if (getPosition() > Constants.ShooterConstants.AMP + 500) {
-        hinge.set(ControlMode.PercentOutput, -0.10);
+        hinge.set(-0.10);
       } else {
-        hinge.set(ControlMode.PercentOutput, 0.0);
+        hinge.set(0.0);
         break;
       }
     }
   }
 
-  public void setEncoderPos(double position) {
-    hinge.setSelectedSensorPosition(position);
-  }
-
   public double getPosition() {
     // System.out.println(hinge.getSelectedSensorPosition());
-    return hinge.getSelectedSensorPosition();
+    return hinge.getPosition().getValueAsDouble();
   }
 
   public boolean switchPressed() {
-    return hinge.isRevLimitSwitchClosed() == 1;
+    return hinge.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround;
   }
+
   public boolean In_limit(double zero){
     // System.out.println((hinge.getSelectedSensorPosition() + "+" + (Constants.ShooterConstants.UP_LIMIT + start)));
-    return (hinge.getSelectedSensorPosition() < Constants.ShooterConstants.UP_LIMIT);
+    return (this.getPosition() < Constants.ShooterConstants.UP_LIMIT);
   }
 
   @Override
-
   public void periodic() {
-    if (switchPressed()) {
-      setEncoderPos(0.0);
-    }
     SmartDashboard.putNumber("Shooter Pivot Encoder", getPosition());
     //System.out.println(this.getPosition());
     /*

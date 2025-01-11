@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ControlModeValue;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import org.ejml.ops.FConvertArrays;
@@ -18,7 +22,7 @@ public class Feeder extends SubsystemBase {
   /** Creates a new Shooter. */
   public Feeder() {
     shooterFeed = new TalonFX(Constants.FeederConstants.BACK);
-    shooterFeed.setNeutralMode(NeutralMode.Brake);
+    shooterFeed.setNeutralMode(NeutralModeValue.Brake);
     limitSwitch = new DigitalInput(Constants.FeederConstants.LIMIT_SWITCH);
   }
 
@@ -26,7 +30,7 @@ public class Feeder extends SubsystemBase {
     if (power < 0) {
       power *= 0.375;
     }
-    shooterFeed.set(ControlMode.PercentOutput, power);
+    shooterFeed.set(power);
   }
   
   public boolean switchPressed() {
