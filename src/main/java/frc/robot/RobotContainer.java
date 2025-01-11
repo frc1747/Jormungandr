@@ -8,7 +8,6 @@ import frc.robot.commands.AdjustNote;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Teleop.CleanIntake;
 import frc.robot.commands.Teleop.BringIn;
-import frc.robot.commands.Teleop.Climb;
 import frc.robot.commands.Teleop.PodiumShooterPreset;
 import frc.robot.commands.Teleop.FloorPickup;
 import frc.robot.commands.Teleop.FullIntake;
@@ -28,7 +27,6 @@ import frc.robot.commands.Autoscommands.ShootAuto;
 import frc.robot.commands.Teleop.TeleopSwerve;
 import frc.robot.commands.Teleop.Transition;
 import frc.robot.commands.Teleop.intakeMove;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Alert;
 import frc.robot.util.Alert.AlertType;
@@ -74,8 +72,6 @@ public class RobotContainer {
   public final PivotIntake pIntake = new PivotIntake();
   public final Intake intake = new Intake();
   public final Drivetrain drivetrain = new Drivetrain();
-  public final Climber leftClimber = new Climber(Constants.ClimberConstants.LEFT, "Left", true);
-  public final Climber rightClimber = new Climber(Constants.ClimberConstants.RIGHT, "Right", false);
   public final Feeder feeder = new Feeder();
 
   // Braden failing to code
@@ -236,19 +232,6 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value)
       .whileTrue(new CleanIntake(pIntake, intake))
       .onFalse(new StowIntake(intake, pIntake));
-
-    // climber 
-    new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
-      .whileTrue(new Climb(leftClimber, -Constants.ClimberConstants.CLIMBER_SPEED));
-    
-    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
-      .whileTrue(new Climb(leftClimber, Constants.ClimberConstants.CLIMBER_SPEED));
-
-    new JoystickButton(operator, XboxController.Button.kRightBumper.value)
-      .whileTrue(new Climb(rightClimber, Constants.ClimberConstants.CLIMBER_SPEED));
-    
-    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0))
-      .whileTrue(new Climb(rightClimber, -Constants.ClimberConstants.CLIMBER_SPEED));
     
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetGyro(drivetrain));

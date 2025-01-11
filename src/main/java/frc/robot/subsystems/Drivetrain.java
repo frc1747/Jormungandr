@@ -9,7 +9,12 @@ import java.util.function.Supplier;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -19,6 +24,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkRelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,6 +35,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -84,12 +91,49 @@ public class Drivetrain extends SubsystemBase {
     resetModulesToAbsolute();
 
     swerveOdometry = new SwerveDriveOdometry(Constants.DrivetrainConstants.swerveKinematics, getYaw(), getModulePositions());
+    /*
     AutoBuilder.configureHolonomic(
       this::getPose, // Robot pose supplier
       this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeChassisSpeeds,
       this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       Constants.AutoConstants.pathFollowerConfig,
+      this::shouldFlipPath,
+      this // Reference to this subsystem to set requirements
+    );
+
+    6.85782
+    40,526.388852
+    */
+    RobotConfig ppConfig = new RobotConfig(
+      55, 
+      11.859622, 
+      new ModuleConfig(
+        0.0508, 
+        0, 
+        1.0, 
+        DCMotor.getNEO(0),
+        0, 
+        1
+      ), 
+      Constants.DrivetrainConstants.CENTER_TO_WHEEL
+    );
+    try {
+      ppConfig = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    AutoBuilder.configure(
+      this::getPose, // Robot pose supplier
+      this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getRobotRelativeChassisSpeeds,
+      this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      new PPHolonomicDriveController(
+        new PIDConstants(3.0, 0.0, 0.0), 
+        new PIDConstants(1, 0.0, 0.01)
+      ),
+      ppConfig,
       this::shouldFlipPath,
       this // Reference to this subsystem to set requirements
     );
@@ -294,12 +338,13 @@ public class Drivetrain extends SubsystemBase {
         .idleMode(Constants.DrivetrainConstants.angleNeutralMode)
         .inverted(Constants.DrivetrainConstants.angleMotorInvert)
         .apply(encoderConfig)
-        .closedLoop.pidf(
-          Constants.DrivetrainConstants.ANGLE_KP, 
-          Constants.DrivetrainConstants.ANGLE_KI, 
-          Constants.DrivetrainConstants.ANGLE_KD, 
-          Constants.DrivetrainConstants.ANGLE_KF
-        );
+        .closedLoop
+          .pidf(
+            Constants.DrivetrainConstants.ANGLE_KP, 
+            Constants.DrivetrainConstants.ANGLE_KI, 
+            Constants.DrivetrainConstants.ANGLE_KD, 
+            Constants.DrivetrainConstants.ANGLE_KF
+          );
       angleMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       
 
@@ -307,22 +352,30 @@ public class Drivetrain extends SubsystemBase {
       resetToAbsolute();
     }
 
-    private void configDriveMotor() {        
-      driveMotor.restoreFactoryDefaults();
-      CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
-      driveMotor.setSmartCurrentLimit(Constants.DrivetrainConstants.driveContinuousCurrentLimit);
-      driveMotor.setInverted(Constants.DrivetrainConstants.driveMotorInvert);
-      driveMotor.setIdleMode(Constants.DrivetrainConstants.driveNeutralMode);
-      driveEncoder.setVelocityConversionFactor(Constants.DrivetrainConstants.driveConversionVelocityFactor);
-      driveEncoder.setPositionConversionFactor(Constants.DrivetrainConstants.driveConversionPositionFactor);
-      driveController.setP(Constants.DrivetrainConstants.DRIVE_KP);
-      driveController.set
-      driveController.setI(Constants.DrivetrainConstants.DRIVE_KI);
-      driveController.setD(Constants.DrivetrainConstants.DRIVE_KD);
-      driveController.setFF(Constants.DrivetrainConstants.DRIVE_KF);
-      driveMotor.enableVoltageCompensation(Constants.DrivetrainConstants.voltageComp);
-      driveMotor.burnFlash();
+    private void configDriveMotor() {    
+      EncoderConfig encoderConfig = new EncoderConfig();
+      encoderConfig
+        .positionConversionFactor(Constants.DrivetrainConstants.driveConversionPositionFactor)
+        .velocityConversionFactor(Constants.DrivetrainConstants.driveConversionVelocityFactor);
+      
+      SparkMaxConfig config = new SparkMaxConfig();
+      config.smartCurrentLimit(Constants.DrivetrainConstants.driveContinuousCurrentLimit)
+        .idleMode(Constants.DrivetrainConstants.driveNeutralMode)
+        .inverted(Constants.DrivetrainConstants.driveMotorInvert)
+        .voltageCompensation(Constants.DrivetrainConstants.voltageComp)
+        .apply(encoderConfig)
+        .closedLoop
+          .pidf(
+            Constants.DrivetrainConstants.DRIVE_KP, 
+            Constants.DrivetrainConstants.DRIVE_KI, 
+            Constants.DrivetrainConstants.DRIVE_KD, 
+            Constants.DrivetrainConstants.DRIVE_KF
+          );
+      driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      
       driveEncoder.setPosition(0.0);
+
+      CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
     }
 
     public void resetToAbsolute() {
@@ -342,13 +395,12 @@ public class Drivetrain extends SubsystemBase {
       if (isOpenLoop) {
         double percentOutput = desiredState.speedMetersPerSecond / Constants.DrivetrainConstants.MAX_SPEED;
         driveMotor.set(percentOutput);
-      } else {
+      } else {        
         driveController.setReference(
-          desiredState.speedMetersPerSecond,
-          ControlType.kVelocity,
-          0,
-          feedforward.calculate(desiredState.speedMetersPerSecond)
-        );
+          desiredState.speedMetersPerSecond, 
+          ControlType.kVelocity, 
+          ClosedLoopSlot.kSlot0, 
+          feedforward.calculate(desiredState.speedMetersPerSecond));
       }
     }
 

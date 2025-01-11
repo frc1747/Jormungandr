@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
@@ -50,11 +52,15 @@ public class PivotIntake extends SubsystemBase {
   }
 
   public void liftIntake() {
-    hinge.setPosition(Constants.IntakeConstants.STOWED);
+    hinge.setControl(new PositionDutyCycle(Constants.IntakeConstants.STOWED));
   }
 
   public void dropIntake() {
-    hinge.setPosition(Constants.IntakeConstants.DROPPED);
+    hinge.setControl(new PositionDutyCycle(Constants.IntakeConstants.DROPPED));
+  }
+
+  public void setEncoderPos(double position) {
+    hinge.setPosition(position);
   }
 
   public double getPosition() {

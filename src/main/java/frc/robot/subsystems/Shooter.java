@@ -25,7 +25,6 @@ public class Shooter extends SubsystemBase {
     shooting2 = new TalonFX(Constants.ShooterConstants.FRONT_TWO);
     shooting.setNeutralMode(NeutralModeValue.Brake);
     shooting2.setNeutralMode(NeutralModeValue.Brake);
-    shooting.setselected
   }
 
   public void setShooterPower(double power) {

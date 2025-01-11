@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -39,6 +40,7 @@ public class PivotShooter extends SubsystemBase {
         .withReverseLimitAutosetPositionValue(0.0)
       )
     );
+
     this.start =  hinge.getPosition().getValueAsDouble();
   }
 
@@ -58,7 +60,7 @@ public class PivotShooter extends SubsystemBase {
   }
 
   public void goTo(double encoderPosition) {
-    hinge.setPosition(encoderPosition);
+    hinge.setControl(new PositionDutyCycle(encoderPosition));
   }
 
   public void alignShooterAmp() {
@@ -73,6 +75,10 @@ public class PivotShooter extends SubsystemBase {
         break;
       }
     }
+  }
+
+  public void setEncoderPos(double position) {
+    hinge.setPosition(position);
   }
 
   public double getPosition() {
