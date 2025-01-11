@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PivotIntake;
-import frc.robot.subsystems.Shooter;
 
 public class ManualControlIntake extends Command {
   private PivotIntake pivot;

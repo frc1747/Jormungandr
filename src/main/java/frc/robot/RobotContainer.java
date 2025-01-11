@@ -5,27 +5,17 @@
 package frc.robot;
 
 import frc.robot.commands.AdjustNote;
-import frc.robot.commands.Autos;
 import frc.robot.commands.Teleop.CleanIntake;
-import frc.robot.commands.Teleop.BringIn;
-import frc.robot.commands.Teleop.PodiumShooterPreset;
-import frc.robot.commands.Teleop.FloorPickup;
 import frc.robot.commands.Teleop.FullIntake;
-import frc.robot.commands.Autoscommands.IntakeOut;
-import frc.robot.commands.Teleop.Intakeshoot;
 import frc.robot.commands.Teleop.Shoot;
-import frc.robot.commands.Teleop.ShooterAlignAmp;
-import frc.robot.commands.Teleop.ShooterDown;
 import frc.robot.commands.Teleop.ShooterFeed;
 import frc.robot.commands.Teleop.ShooterPivotPreset;
 import frc.robot.commands.Teleop.Shooterarm;
 import frc.robot.commands.Teleop.StowIntake;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.Autoscommands.IntakeAutos;
-import frc.robot.commands.Autoscommands.ManualControlIntake;
 import frc.robot.commands.Autoscommands.ShootAuto;
 import frc.robot.commands.Teleop.TeleopSwerve;
-import frc.robot.commands.Teleop.Transition;
 import frc.robot.commands.Teleop.intakeMove;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Alert;
@@ -49,7 +39,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.StadiaController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -67,7 +56,7 @@ public class RobotContainer {
   public static CTREConfigs ctreConfigs = new CTREConfigs();
 
   // subsystems
-  public final PivotShooter pShooter = new PivotShooter();
+  //public final PivotShooter pShooter = new PivotShooter();
   public final Shooter shooter = new Shooter();
   public final PivotIntake pIntake = new PivotIntake();
   public final Intake intake = new Intake();
@@ -129,7 +118,7 @@ public class RobotContainer {
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
 
-    pShooter.setEncoderPos(0.0);
+    //pShooter.setEncoderPos(0.0);
     pIntake.setEncoderPos(0.0);
 
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -151,9 +140,6 @@ public class RobotContainer {
     
     //intake.setDefaultCommand(
     //   new Intakeshoot(intake, intakein_out));
-
-    pShooter.setDefaultCommand(
-      new Shooterarm(pShooter, shooterarm , arm_zero ));
 
 
     // Braden's remode sick day code UNTESTED
@@ -216,10 +202,6 @@ public class RobotContainer {
      .whileTrue(new ShooterFeed(feeder, intake, 1));
     new JoystickButton(operator, XboxController.Button.kY.value)
       .onTrue(new AdjustNote(feeder, intake));
-    
-    operatorDpadUp.onTrue(new ShooterPivotPreset(pShooter, Constants.ShooterConstants.PODIUM));
-    operatorDpadLeft.onTrue(new ShooterPivotPreset(pShooter, 0.0));
-    operatorDpadRight.onTrue(new ShooterPivotPreset(pShooter, Constants.ShooterConstants.UP_LIMIT));
     
     // magic intake
     new Trigger(() -> (driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))

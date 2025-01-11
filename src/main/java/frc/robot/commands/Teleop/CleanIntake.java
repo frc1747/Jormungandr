@@ -4,13 +4,10 @@
 
 package frc.robot.commands.Teleop;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PivotIntake;
-import frc.robot.subsystems.PivotShooter;
 
 public class CleanIntake extends Command {
   private final PivotIntake intakePivot;

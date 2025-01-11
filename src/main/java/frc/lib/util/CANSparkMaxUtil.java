@@ -2,7 +2,6 @@ package frc.lib.util;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;

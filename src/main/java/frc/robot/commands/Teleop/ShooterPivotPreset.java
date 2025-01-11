@@ -5,7 +5,6 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.PivotShooter;
 
 public class ShooterPivotPreset extends Command {

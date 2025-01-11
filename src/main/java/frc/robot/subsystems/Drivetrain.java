@@ -4,10 +4,9 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
-import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -19,9 +18,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.EncoderConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkRelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -36,7 +33,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -292,7 +288,7 @@ public class Drivetrain extends SubsystemBase {
 
     private RelativeEncoder driveEncoder;
     private RelativeEncoder integratedAngleEncoder;
-    private CANCoder angleEncoder;
+    private CANcoder angleEncoder;
 
     private SparkClosedLoopController driveController;  // Deprecated from SparkMaxPIDController
     private SparkClosedLoopController angleController;
@@ -305,7 +301,7 @@ public class Drivetrain extends SubsystemBase {
       this.angleOffset = moduleConstants.angleOffset;
 
       // CANCoder
-      angleEncoder = new CANCoder(moduleConstants.cancoderID);  // Fix this deprecation later
+      angleEncoder = new CANcoder(moduleConstants.cancoderID);  // Fix this deprecation later
       configAngleEncoder();
 
       // Angle Motor
@@ -323,10 +319,10 @@ public class Drivetrain extends SubsystemBase {
       lastAngle = getState().angle;
     }
 
-    private void configAngleEncoder() {        
-      angleEncoder.configFactoryDefault();
+    private void configAngleEncoder() {
+      angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
       CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kMinimal);
-      angleEncoder.configAllSettings(RobotContainer.ctreConfigs.swerveCanCoderConfig);
+      angleEncoder.getConfigurator().apply(RobotContainer.ctreConfigs.swerveCanCoderConfig);
     }
 
     private void configAngleMotor() {
@@ -417,7 +413,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Rotation2d getCancoder() {
-      return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
+      return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
     public SwerveModuleState getState() {

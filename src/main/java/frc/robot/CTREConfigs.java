@@ -1,20 +1,17 @@
 package frc.robot;
-
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.SensorTimeBase;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import static edu.wpi.first.units.Units.Degrees;
 
 public final class CTREConfigs {
-    public CANCoderConfiguration swerveCanCoderConfig;
-
+    public CANcoderConfiguration swerveCanCoderConfig;
+    public MagnetSensorConfigs magnetSensorConfig;
     public CTREConfigs() {
-        swerveCanCoderConfig = new CANCoderConfiguration();
-        
-        // Swerve CANCoder Configuration
-        swerveCanCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        swerveCanCoderConfig.sensorDirection = Constants.DrivetrainConstants.canCoderInvert;
-        swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        swerveCanCoderConfig = new CANcoderConfiguration();
+        magnetSensorConfig = new MagnetSensorConfigs();
+        magnetSensorConfig.withAbsoluteSensorDiscontinuityPoint(Degrees.of(360)); // https://docs.wpilib.org/en/stable/docs/software/basic-programming/java-units.html
+        magnetSensorConfig.withSensorDirection(Constants.DrivetrainConstants.canCoderDirection);
+        magnetSensorConfig.withMagnetOffset(Degrees.of(0));
+        swerveCanCoderConfig.withMagnetSensor(magnetSensorConfig);
     }
 }

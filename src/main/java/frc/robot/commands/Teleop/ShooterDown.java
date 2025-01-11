@@ -6,7 +6,6 @@ package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.PivotShooter;
-import frc.robot.subsystems.Shooter;
 
 public class ShooterDown extends Command {
   private PivotShooter shooter;
