@@ -262,6 +262,8 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond); 
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Position", mod.getPosition().distanceMeters);  
     }
+
+    //swerveMods[1].setMotorForTest();
   }
 
 
@@ -330,7 +332,8 @@ public class Drivetrain extends SubsystemBase {
       encoderConfig.positionConversionFactor(Constants.DrivetrainConstants.angleConversionFactor);
 
       SparkMaxConfig config = new SparkMaxConfig();
-      config.smartCurrentLimit(Constants.DrivetrainConstants.angleContinuousCurrentLimit)
+      config
+        .smartCurrentLimit(Constants.DrivetrainConstants.angleContinuousCurrentLimit)
         .idleMode(Constants.DrivetrainConstants.angleNeutralMode)
         .inverted(Constants.DrivetrainConstants.angleMotorInvert)
         .apply(encoderConfig)
@@ -341,11 +344,21 @@ public class Drivetrain extends SubsystemBase {
             Constants.DrivetrainConstants.ANGLE_KD, 
             Constants.DrivetrainConstants.ANGLE_KF
           );
+      config
+        .signals
+          .primaryEncoderVelocityPeriodMs(500)
+          .primaryEncoderPositionPeriodMs(20)
+          .analogVoltagePeriodMs(500);
+
       angleMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       
 
-      CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
+      //CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
       resetToAbsolute();
+    }
+
+    public void setMotorForTest() {
+      angleMotor.set(1.0);
     }
 
     private void configDriveMotor() {    
@@ -355,7 +368,8 @@ public class Drivetrain extends SubsystemBase {
         .velocityConversionFactor(Constants.DrivetrainConstants.driveConversionVelocityFactor);
       
       SparkMaxConfig config = new SparkMaxConfig();
-      config.smartCurrentLimit(Constants.DrivetrainConstants.driveContinuousCurrentLimit)
+      config
+        .smartCurrentLimit(Constants.DrivetrainConstants.driveContinuousCurrentLimit)
         .idleMode(Constants.DrivetrainConstants.driveNeutralMode)
         .inverted(Constants.DrivetrainConstants.driveMotorInvert)
         .voltageCompensation(Constants.DrivetrainConstants.voltageComp)
@@ -367,11 +381,16 @@ public class Drivetrain extends SubsystemBase {
             Constants.DrivetrainConstants.DRIVE_KD, 
             Constants.DrivetrainConstants.DRIVE_KF
           );
+      config
+        .signals
+          .primaryEncoderVelocityPeriodMs(20)
+          .primaryEncoderPositionPeriodMs(20)
+          .analogVoltagePeriodMs(50);
       driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       
       driveEncoder.setPosition(0.0);
 
-      CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
+      //CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
     }
 
     public void resetToAbsolute() {
