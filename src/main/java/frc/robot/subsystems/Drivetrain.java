@@ -4,9 +4,14 @@
 
 package frc.robot.subsystems;
 
+//log imports
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -14,18 +19,19 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.EncoderConfig;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -34,22 +40,23 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.CANCoderUtil;
-import frc.lib.util.CANSparkMaxUtil;
-import frc.lib.util.SwerveModuleConstants;
 import frc.lib.util.CANCoderUtil.CCUsage;
-import frc.lib.util.CANSparkMaxUtil.Usage;
+import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class Drivetrain extends SubsystemBase {
   public SwerveDriveOdometry swerveOdometry;
+  //sorry mark
+  public SwerveDriveOdometry swerveOdometry2;
   public SwerveModule[] swerveMods;
   public Pigeon2 gyro;
+  public Pigeon2 gyro2;
 
   public SwerveModule[] swerveModules;
   //public ChassisSpeeds  speed;
@@ -59,8 +66,12 @@ public class Drivetrain extends SubsystemBase {
 
     // Create an instance of the gyro, config its parameters, and zero it out, 
     // making whichever direction the robot is facing when robot code is initialized 0
-    gyro = new Pigeon2(Constants.DrivetrainConstants.PIGEON_ID);
-    gyro.reset();
+    gyro2 = new Pigeon2(Constants.DrivetrainConstants.PIGEON_ID);
+    gyro2.reset();
+    zeroGyro();
+
+    gyro2 = new Pigeon2(Constants.DrivetrainConstants.PIGEON_ID2);
+    gyro2.reset();
     zeroGyro();
     //speed = new ChassisSpeeds(0,0,0);
 
@@ -87,6 +98,8 @@ public class Drivetrain extends SubsystemBase {
     resetModulesToAbsolute();
 
     swerveOdometry = new SwerveDriveOdometry(Constants.DrivetrainConstants.swerveKinematics, getYaw(), getModulePositions());
+
+    swerveOdometry2 = new SwerveDriveOdometry(Constants.DrivetrainConstants.swerveKinematics, getYaw2(gyro2), getModulePositions());
     /*
     AutoBuilder.configureHolonomic(
       this::getPose, // Robot pose supplier
@@ -133,6 +146,29 @@ public class Drivetrain extends SubsystemBase {
       this::shouldFlipPath,
       this // Reference to this subsystem to set requirements
     );
+  }
+  public void pigeonLog(Pose2d pose1, Pose2d pose2) {
+    try {
+      File myObj = new File("C:\\Logs\\pidgeonLog.txt");
+      if (myObj.createNewFile()) {
+        System.out.println("File created: " + myObj.getName());
+      } else {
+        System.out.println("File already exists.");
+      }
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+    try {
+      FileWriter myWriter = new FileWriter("pigeonLog.txt");
+      Transform2d dif = pose1.minus(pose2);
+      myWriter.write("pose1: " + pose1 + ", pose2: " + pose2 + "\ndiff: " + dif);
+      myWriter.close();
+      System.out.println("Successfully wrote to the file.");
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
   }
 
   public boolean shouldFlipPath() {
@@ -200,6 +236,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void zeroGyro() {
     gyro.setYaw(0.0);
+    gyro2.setYaw(0.0);
   }
 
   public void simpleDrive(Translation2d translation, double rotation) {
@@ -209,6 +246,9 @@ public class Drivetrain extends SubsystemBase {
   public Rotation2d getYaw() {
     return (Constants.DrivetrainConstants.invertGyro) ? Rotation2d.fromDegrees(180-gyro.getYaw().getValueAsDouble()) : Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
   }
+  public Rotation2d getYaw2(Pigeon2 pig) {
+    return (Constants.DrivetrainConstants.invertGyro) ? Rotation2d.fromDegrees(180-gyro.getYaw().getValueAsDouble()) : Rotation2d.fromDegrees(pig.getYaw().getValueAsDouble());
+  }//oink oink
 
   public void resetModulesToAbsolute() {
     for (SwerveModule mod : swerveMods) {
@@ -235,6 +275,10 @@ public class Drivetrain extends SubsystemBase {
   public Pose2d getPose() {
     return swerveOdometry.getPoseMeters();
   }
+  public Pose2d getPose2() {
+    return swerveOdometry2.getPoseMeters();
+  }
+
 
   public void resetPose(Pose2d pose) {
     for (SwerveModule mod : swerveMods) {
@@ -252,7 +296,10 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry every robot cycle tick
+
     swerveOdometry.update(getYaw(), getModulePositions());
+
+    pigeonLog(getPose(), getPose2());
     SmartDashboard.putString("Robot Location: ", getPose().getTranslation().toString());
     SmartDashboard.putString("Yaw status", getYaw().toString());
 

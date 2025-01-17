@@ -102,6 +102,7 @@ public final class Constants {
     public static final SensorDirectionValue canCoderDirection = chosenModule.canCoderDirection; // Should the cancoder be inverted based on the swerve module we're using
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW- (DO NOT USE, ENABLES ROBOT-CENTRIC)
     public static final int PIGEON_ID = 50;
+    public static final int PIGEON_ID2 = 50; // fix in post
 
     // Physical measurements
     public static final double trackWidth = Units.inchesToMeters(22.5);
