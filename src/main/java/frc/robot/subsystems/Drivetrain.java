@@ -162,7 +162,7 @@ public class Drivetrain extends SubsystemBase {
     try {
       FileWriter myWriter = new FileWriter("pigeonLog.txt");
       Transform2d dif = pose1.minus(pose2);
-      myWriter.write("pose1: " + pose1 + ", pose2: " + pose2 + "\ndiff: " + dif);
+      myWriter.append("pose1: " + pose1 + ", pose2: " + pose2 + "\ndiff: " + dif); // Shhhh but it does not over write anymore
       myWriter.close();
       System.out.println("Successfully wrote to the file.");
     } catch (IOException e) {
