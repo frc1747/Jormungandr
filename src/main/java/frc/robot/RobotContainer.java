@@ -13,6 +13,7 @@ import frc.robot.commands.Teleop.ShooterPivotPreset;
 import frc.robot.commands.Teleop.Shooterarm;
 import frc.robot.commands.Teleop.StowIntake;
 import frc.robot.commands.ResetGyro;
+import frc.robot.commands.ResetIntake;
 import frc.robot.commands.Autoscommands.IntakeAutos;
 import frc.robot.commands.Autoscommands.ShootAuto;
 import frc.robot.commands.Teleop.TeleopSwerve;
@@ -204,19 +205,22 @@ public class RobotContainer {
       .onTrue(new AdjustNote(feeder, intake));
     
     // magic intake
-    new Trigger(() -> (driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
+    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
       .whileTrue(new FullIntake(intake, pIntake, feeder, shooter))
       .onFalse(new StowIntake(intake, pIntake));
       //.whileTrue(new FloorPickup(intake, pIntake));
       //.whileFalse(new StowIntake(intake, pIntake));
     
     // clean intake
-    new JoystickButton(driver, XboxController.Button.kA.value)
+    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0))
       .whileTrue(new CleanIntake(pIntake, intake))
       .onFalse(new StowIntake(intake, pIntake));
     
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetGyro(drivetrain));
+
+    new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
+      .onTrue(new ResetIntake(pIntake));
   }
   
 

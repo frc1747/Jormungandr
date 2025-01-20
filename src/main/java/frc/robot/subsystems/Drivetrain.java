@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -432,7 +434,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Rotation2d getCancoder() {
-      return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition().getValueAsDouble());
+      return Rotation2d.fromDegrees(angleEncoder.getPosition().getValue().in(Degrees));
     }
 
     public SwerveModuleState getState() {

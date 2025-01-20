@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -28,7 +30,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double getSpeed() {
-    return (shooting.getVelocity().getValueAsDouble()*600 ) / 4096;
+    return (shooting.getVelocity().getValue().in(RotationsPerSecond) *600 ) / 4096;
   }
   
   @Override

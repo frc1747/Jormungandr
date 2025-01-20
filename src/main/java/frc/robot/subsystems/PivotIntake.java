@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -12,6 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -64,7 +67,7 @@ public class PivotIntake extends SubsystemBase {
 
   public double getPosition() {
     // System.out.println(hinge.getSelectedSensorPosition());
-    return hinge.getPosition().getValueAsDouble();
+    return hinge.getPosition().getValue().in(Rotations);
   }
 
   public boolean switchPressed() {

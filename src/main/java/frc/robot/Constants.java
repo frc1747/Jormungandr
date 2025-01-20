@@ -37,9 +37,9 @@ public final class Constants {
     public static final int LIMIT_SWITCH = 1;
 
     public static final double STOWED = 0.0;
-    public static final double DROPPED = 65000; // was 64000
-    public static final double CLEAN = 19000;
-    public static final double SLOW_POSITION = 25000;
+    public static final double DROPPED = 34; // was 64000
+    public static final double CLEAN = 10;
+    public static final double SLOW_POSITION = 10;
 
     public static final double IN_SPEED = 0.5; // was 1.00
     public static final double OUT_SPEED = -0.4; // was -0.75
@@ -175,7 +175,7 @@ public final class Constants {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 2;
       public static final int canCoderID = 3;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(48.763); // was 297.9
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(294.4); // was 297.9
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 
