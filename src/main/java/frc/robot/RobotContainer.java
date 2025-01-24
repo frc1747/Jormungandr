@@ -21,13 +21,16 @@ import frc.robot.commands.Teleop.intakeMove;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Alert;
 import frc.robot.util.Alert.AlertType;
-
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PivotIntake;
 import frc.robot.subsystems.PivotShooter;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Shooter;
 
 import java.util.function.BooleanSupplier;
@@ -106,13 +109,13 @@ public class RobotContainer {
   private final DoubleSupplier intakein_out = () -> operator.getRawAxis(XboxController.Axis.kLeftX.value);
   private final DoubleSupplier shooterarm = () -> operator.getRawAxis(XboxController.Axis.kRightY.value);
   private boolean Toggle;
-
-  // autos
   
+  // auto
   private final SendableChooser<Command> autoChooser;
 
+  //Limelight Vision and Pose
+  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drivetrain);
 
-  
   // climber Controls speeds
   double climberspeed = -.05;
  
