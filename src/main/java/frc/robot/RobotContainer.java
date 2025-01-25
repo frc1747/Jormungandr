@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.PivotIntake;
 import frc.robot.subsystems.PivotShooter;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -110,11 +111,13 @@ public class RobotContainer {
   private final DoubleSupplier shooterarm = () -> operator.getRawAxis(XboxController.Axis.kRightY.value);
   private boolean Toggle;
   
-  // auto
+  // auto 
   private final SendableChooser<Command> autoChooser;
 
-  //Limelight Vision and Pose
-  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drivetrain);
+  // Limelight Vision and Pose
+  private final LimeLight limeLightLow = new LimeLight("Low");
+  private final LimeLight limeLightHigh = new LimeLight("High");
+  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drivetrain, limeLightLow, limeLightHigh);
 
   // climber Controls speeds
   double climberspeed = -.05;
@@ -145,11 +148,10 @@ public class RobotContainer {
     //intake.setDefaultCommand(
     //   new Intakeshoot(intake, intakein_out));
 
-
     // Braden's remode sick day code UNTESTED
     NamedCommands.registerCommand("Floor pick up", new IntakeAutos(intake, pIntake));
     NamedCommands.registerCommand("stow", new StowIntake(intake, pIntake));
-// imports needed 
+    // imports needed 
     NamedCommands.registerCommand("shoot", new ShootAuto(shooter, intake,feeder , "shoot"));
 
     
