@@ -64,7 +64,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
                 System.out.println("Mt2: " + mt2.pose);
                 poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-                System.out.println(this.getEstimatedPose());
+                // System.out.println(this.getEstimatedPose());
             } else {
                 break;
             }
