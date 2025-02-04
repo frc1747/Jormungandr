@@ -115,9 +115,8 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   // Limelight Vision and Pose
-  private final LimeLight limeLightLow = new LimeLight("Low");
-  private final LimeLight limeLightHigh = new LimeLight("High");
-  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drivetrain, limeLightLow, limeLightHigh);
+  private final LimeLight limeLight = new LimeLight("limelight");
+  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drivetrain, limeLight);
 
   // climber Controls speeds
   double climberspeed = -.05;

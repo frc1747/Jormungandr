@@ -43,25 +43,30 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     public void periodic() {
         poseEstimator.updateWithTime(System.currentTimeMillis()/1000,drivetrain.getYaw(),drivetrain.getModulePositions());
         
+        for (int i = 0; i < limeLights.length; i++) {
+            mt2s[i] = LimeLightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLights[i].getName());
+        }
+
         for (LimeLight limeLight : limeLights) {
             LimeLightHelpers.SetRobotOrientation(limeLight.getName(), poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         }
-        System.out.println(this.getEstimatedPose());
         
         boolean rejectVisionUpdate = false;
         if (Math.abs(drivetrain.gyro.getRate()) > 720) { 
             rejectVisionUpdate = true;
         }
-        
-        if (!rejectVisionUpdate) {
-            for (LimeLightHelpers.PoseEstimate mt2 : mt2s) {
-                if (mt2.tagCount == 0) {
-                    rejectVisionUpdate = true;
-                } 
-                if (!rejectVisionUpdate) {
-                    poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-                    poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-                }
+
+        for (LimeLightHelpers.PoseEstimate mt2 : mt2s) {
+            if (mt2.tagCount == 0) {
+                rejectVisionUpdate = true;
+            } 
+            if (!rejectVisionUpdate) {
+                poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+                System.out.println("Mt2: " + mt2.pose);
+                poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+                System.out.println(this.getEstimatedPose());
+            } else {
+                break;
             }
         }
     }
