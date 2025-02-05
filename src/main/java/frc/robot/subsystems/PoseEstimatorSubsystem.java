@@ -13,7 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.LimeLightHelpers;
+import frc.robot.RobotContainer;
 
 public class PoseEstimatorSubsystem extends SubsystemBase {
     private Drivetrain drivetrain;
@@ -48,7 +50,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         }
 
         for (LimeLight limeLight : limeLights) {
-            LimeLightHelpers.SetRobotOrientation(limeLight.getName(), poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            LimeLightHelpers.SetRobotOrientation(limeLight.getName(), drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         }
         
         boolean rejectVisionUpdate = false;
@@ -62,9 +64,13 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             } 
             if (!rejectVisionUpdate) {
                 poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-                System.out.println("Mt2: " + mt2.pose);
+                //SmartDashboard.putString("Bot Position MegaTag2", "" + mt2.pose);
+                RobotContainer.limelight_field.setRobotPose(mt2.pose);
+                //SmartDashboard.putData(mt2.pose);
                 poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-                // System.out.println(this.getEstimatedPose());
+                //SmartDashboard.putString("Bot Position Combined", "" + this.getEstimatedPose());
+                drivetrain.setPose(mt2.pose);
+                RobotContainer.combined_field.setRobotPose(drivetrain.getPose());
             } else {
                 break;
             }
