@@ -50,10 +50,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         }
 
         for (LimeLight limeLight : limeLights) {
-            LimeLightHelpers.SetRobotOrientation(limeLight.getName(), drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            LimeLightHelpers.SetRobotOrientation(limeLight.getName(), drivetrain.getYaw().getDegrees(), 0, 0, 0, 0, 0);
         }
         
         boolean rejectVisionUpdate = false;
+
         if (Math.abs(drivetrain.gyro.getRate()) > 720) { 
             rejectVisionUpdate = true;
         }
