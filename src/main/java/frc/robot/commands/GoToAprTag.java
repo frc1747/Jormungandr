@@ -4,34 +4,45 @@
 
 package frc.robot.commands;
 
-import frc.robot.LimeLightHelpers;
-import frc.robot.subsystems.LimeLight;
-import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.LimeLight;
 
 /** An example command that uses an example subsystem. */
 public class GoToAprTag extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final LimeLight limelight;
-
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param limelight The subsystem used by this command.
-   */
-  public GoToAprTag(LimeLight limelight) {
-    this.limelight = limelight;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(limelight);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  @Override
-  public void execute() {
-    
+    private static final int AprilTag = 0;
+        @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+        private final LimeLight limelight;
+        private final Drivetrain drivetrain;
+        private final Joystick controller;
+      
+        /**
+         * Creates a new ExampleCommand.
+         *
+         * @param limelight The subsystem used by this command.
+         */
+        public GoToAprTag(LimeLight limelight, Drivetrain drivetrain, Joystick controller) {
+          this.limelight = limelight;
+          this.drivetrain = drivetrain;
+          this.controller = controller;
+          // Use addRequirements() here to declare subsystem dependencies.
+          addRequirements(limelight, drivetrain);
+        }
+      
+        // Called when the command is initially scheduled.
+        @Override
+        public void initialize() {}
+      
+        @Override
+        public void execute() {
+          final double yawTolerance = 0.0;
+      
+          limelight.updateTargetsList();
+      
+          final int tagIDchoice = (AprilTag);
+          int index = limelight.getTagIndex(AprilTag);
   }
 
 //   // Called every time the scheduler runs while the command is scheduled.
