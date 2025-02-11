@@ -43,16 +43,13 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        poseEstimator.updateWithTime(System.currentTimeMillis()/1000,drivetrain.getYaw(),drivetrain.getModulePositions());
+        poseEstimator.updateWithTime(System.currentTimeMillis()/1000, drivetrain.gyro.getRotation2d(), drivetrain.getModulePositions());
         
         for (int i = 0; i < limeLights.length; i++) {
+            LimeLightHelpers.SetRobotOrientation(limeLights[i].getName(), drivetrain.getYaw().getDegrees(), 0, 0, 0, 0, 0);
             mt2s[i] = LimeLightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLights[i].getName());
         }
 
-        for (LimeLight limeLight : limeLights) {
-            LimeLightHelpers.SetRobotOrientation(limeLight.getName(), drivetrain.getYaw().getDegrees(), 0, 0, 0, 0, 0);
-        }
-        
         boolean rejectVisionUpdate = false;
 
         if (Math.abs(drivetrain.gyro.getRate()) > 720) { 
@@ -65,13 +62,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             } 
             if (!rejectVisionUpdate) {
                 poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-                //SmartDashboard.putString("Bot Position MegaTag2", "" + mt2.pose);
-                RobotContainer.limelight_field.setRobotPose(mt2.pose);
-                //SmartDashboard.putData(mt2.pose);
                 poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-                //SmartDashboard.putString("Bot Position Combined", "" + this.getEstimatedPose());
-                drivetrain.setPose(mt2.pose);
-                RobotContainer.combined_field.setRobotPose(drivetrain.getPose());
+
+                RobotContainer.limelight_field.setRobotPose(mt2.pose);
+                RobotContainer.combined_field.setRobotPose(this.getEstimatedPose());
+                //SmartDashboard.putString("Bot Position MegaTag2", "" + mt2.pose);
+                //SmartDashboard.putData(mt2.pose);
+                // SmartDashboard.putString("Bot Position Combined", "" + this.getEstimatedPose());
+                // drivetrain.setPose(mt2.pose);
+                // RobotContainer.combined_field.setRobotPose(drivetrain.getPose());
             } else {
                 break;
             }
