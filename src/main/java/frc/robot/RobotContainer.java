@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AdjustNote;
+import frc.robot.commands.AlignWithAprTag;
 import frc.robot.commands.Teleop.CleanIntake;
 import frc.robot.commands.Teleop.FullIntake;
 import frc.robot.commands.Teleop.Shoot;
@@ -110,6 +111,10 @@ public class RobotContainer {
   private final DoubleSupplier intakeMovement = () -> operator.getRawAxis(XboxController.Axis.kLeftY.value);
   private final DoubleSupplier intakein_out = () -> operator.getRawAxis(XboxController.Axis.kLeftX.value);
   private final DoubleSupplier shooterarm = () -> operator.getRawAxis(XboxController.Axis.kRightY.value);
+  private final DoubleSupplier rightTriggerDouble = () -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value);
+  private final DoubleSupplier leftTriggerDouble = () -> operator.getRawAxis(XboxController.Axis.kLeftTrigger.value);
+
+  
   private boolean Toggle;
   
   // auto 
@@ -215,13 +220,19 @@ public class RobotContainer {
      .whileTrue(new ShooterFeed(feeder, intake, 1));
     new JoystickButton(operator, XboxController.Button.kY.value)
       .onTrue(new AdjustNote(feeder, intake));
-    
-    // magic intake
+
+    // Strafe Code
     new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
-      .whileTrue(new FullIntake(intake, pIntake, feeder, shooter))
-      .onFalse(new StowIntake(intake, pIntake));
-      //.whileTrue(new FloorPickup(intake, pIntake));
-      //.whileFalse(new StowIntake(intake, pIntake));
+      .whileTrue(new AlignWithAprTag(drivetrain, limeLight, driver, leftTriggerDouble,-1));
+    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0))
+      .whileTrue(new AlignWithAprTag(drivetrain, limeLight, driver, rightTriggerDouble,1));
+    
+    // // magic intake
+    // new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
+    //   .whileTrue(new FullIntake(intake, pIntake, feeder, shooter))
+    //   .onFalse(new StowIntake(intake, pIntake));
+    //   //.whileTrue(new FloorPickup(intake, pIntake));
+    //   //.whileFalse(new StowIntake(intake, pIntake));
     
     // clean intake
     new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0))

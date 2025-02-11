@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import java.util.List;
-
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,12 +19,16 @@ public class AlignWithAprTag extends Command {
   private LimeLight limeLight;
   private Drivetrain drivetrain;
   private Joystick controller;
+  private DoubleSupplier trigger;
+  private int direction;
   
   /** Creates a new LockOn. */
-  public AlignWithAprTag(Drivetrain drivetrain, LimeLight limeLight, Joystick controller) {
+  public AlignWithAprTag(Drivetrain drivetrain, LimeLight limeLight, Joystick controller, DoubleSupplier trigger,int direction) {
     this.limeLight = limeLight;
     this.drivetrain = drivetrain;
     this.controller = controller;
+    this.trigger = trigger;
+    this.direction = direction;
     addRequirements(drivetrain, limeLight);
   }
 
@@ -43,60 +47,71 @@ public class AlignWithAprTag extends Command {
   @Override
   public void execute() {
     final double yawTolerance = 0.0;
+
+    // Strafe Code
+    
     
     limeLight.updateTargetsList();
 
     // using both 4 and 7
     
-    final int tagIDchoice1 = 4;
-    int index1 = limeLight.getTagIndex(tagIDchoice1);
+    // final int tagIDchoice1 = 4;
+    // int index1 = limeLight.getTagIndex(tagIDchoice1);
 
-    final int tagIDchoice2 = 7;
-    int index2 = LimeLight.getTagIndex(tagIDchoice2);
+    // final int tagIDchoice2 = 7;
+    // int index2 = LimeLight.getTagIndex(tagIDchoice2);
 
-    int index = -1;
+    // int index = -1;
 
-    if (index1 != -1) {
-      index = index1;
-    } else if (index2 != -1) {
-      index = index2;
-    }
+    // if (index1 != -1) {
+    //   index = index1;
+    // } else if (index2 != -1) {
+    //   index = index2;
+    // }
 
-    double translationX = deadband(-controller.getRawAxis(XboxController.Axis.kLeftY.value));
-    double translationY = deadband(-controller.getRawAxis(XboxController.Axis.kLeftX.value));
+    double translationX = deadband(this.trigger.getAsDouble()*this.direction);
+    double translationY = 0.0;
     Translation2d translation = new Translation2d(translationX, translationY).times(Constants.DrivetrainConstants.MAX_SPEED);
-    double rotation = -controller.getRawAxis(XboxController.Axis.kRightX.value) * Constants.DrivetrainConstants.maxAngularVelocity;
+    // double rotation = -controller.getRawAxis(XboxController.Axis.kRightX.value) * Constants.DrivetrainConstants.maxAngularVelocity;
+    double rotation = 0.0;
+
+    drivetrain.simpleDrive(
+      translation,
+      rotation
+    );
 
     // possibly use PID here eventually
-    if (index != -1) {
-      System.out.println(index);
-      rotation = 0.0;
+    // if (index != -1) {
+    //   System.out.println(index);
+    //   rotation = 0.0;
       
-      double yaw = limeLight.getYaw(index);
-      if (yaw <= -yawTolerance) {
-          rotation = 0.3 * Constants.DrivetrainConstants.maxAngularVelocity * (-yaw / 23.0);
-      } 
-      else if (yaw >= yawTolerance) {
-          rotation = -0.3 * Constants.DrivetrainConstants.maxAngularVelocity * (yaw / 23.0);
-      } 
-      drivetrain.simpleDrive(
-        translation,
-        rotation
-      );
+      // double yaw = limeLight.getYaw(index);
+      // if (yaw <= -yawTolerance) {
+      //     rotation = 0.3 * Constants.DrivetrainConstants.maxAngularVelocity * (-yaw / 23.0);
+      // } 
+      // else if (yaw >= yawTolerance) {
+      //     rotation = -0.3 * Constants.DrivetrainConstants.maxAngularVelocity * (yaw / 23.0);
+      // } 
 
-    } else {
-      drivetrain.simpleDrive(
-        translation,
-        rotation
-      );
-    };
+    //   drivetrain.simpleDrive(
+    //     translation,
+    //     rotation
+    //   );
+
+    // } else {
+    //   drivetrain.simpleDrive(
+    //     translation,
+    //     rotation
+    //   );
+    //};
+
   }
 
   public double deadband(double value) {
     if (value >= 0.10) {
       return (value - 0.10) / 0.90;
-    } else if (value <= -0.10) {
-      return (value + 0.10) / 0.90;
+    // } else if (value <= -0.10) {
+    //   return (value + 0.10) / 0.90;
     } else {
       return 0.0;
     }
