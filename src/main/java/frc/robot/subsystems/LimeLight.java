@@ -16,6 +16,7 @@ public class LimeLight extends SubsystemBase {
     NetworkTableEntry xOffsetEntry;
     NetworkTableEntry yOffsetEntry;
     NetworkTableEntry areaEntry;
+    NetworkTableEntry poseAmbiguityEntry;
 
     public LimeLight(String name) {
         this.name = name;
@@ -23,6 +24,7 @@ public class LimeLight extends SubsystemBase {
         xOffsetEntry = table.getEntry("tx");
         yOffsetEntry = table.getEntry("ty");
         areaEntry = table.getEntry("ta");
+        poseAmbiguityEntry = table.getEntry("pa");
     }
 
     public String getName() {
@@ -39,6 +41,10 @@ public class LimeLight extends SubsystemBase {
 
     public double getAreaOffset() {
         return areaEntry.getDouble(101.0);
+    }
+
+    public double getPoseAmbiguity() {
+        return poseAmbiguityEntry.getDouble(-1);
     }
 
     public void robotInit() {

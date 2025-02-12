@@ -52,5 +52,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         }
 
         RobotContainer.estimatedField.setRobotPose(getEstimatedPose());
+
+        System.out.println(limeLight.getPoseAmbiguity());
     }
 }
