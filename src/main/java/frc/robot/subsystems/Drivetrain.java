@@ -255,7 +255,6 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // Update the odometry every robot cycle tick
     swerveOdometry.update(getYaw(), getModulePositions());
-    RobotContainer.combined_field.setRobotPose(getPose());
 
     SmartDashboard.putString("Robot Location: ", getPose().getTranslation().toString());
     SmartDashboard.putString("Yaw status", getYaw().toString());

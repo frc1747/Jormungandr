@@ -20,33 +20,23 @@ import frc.robot.RobotContainer;
 public class PoseEstimatorSubsystem extends SubsystemBase {
     private Drivetrain drivetrain;
     private LimeLight limeLight;
-    private LimeLightHelpers.PoseEstimate mt2;
-    private SwerveDrivePoseEstimator poseEstimator;
+    private Pose2d currentEstimate;
 
     /** Creates a new PoseEstimatorSubsystem. */
     public PoseEstimatorSubsystem(Drivetrain drivetrain, LimeLight limeLight) {
         this.drivetrain = drivetrain;
         this.limeLight = limeLight;
-        this.mt2 = LimeLightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.getName());
-        this.poseEstimator = new SwerveDrivePoseEstimator(Constants.DrivetrainConstants.swerveKinematics, 
-            drivetrain.getYaw(), 
-            drivetrain.getModulePositions(),   
-            new Pose2d());                     // neeeds to be adjusted later
+        currentEstimate = new Pose2d();      // probably needs to be adjested later
     }
 
     public Pose2d getEstimatedPose() {
-        if (mt2.tagCount == 0) {
-            return poseEstimator.getEstimatedPosition();
-        } else {
-            return mt2.pose;
-        }
+        return currentEstimate;
     }
 
     @Override
     public void periodic() {
-        poseEstimator.updateWithTime(System.currentTimeMillis()/1000, drivetrain.gyro.getRotation2d(), drivetrain.getModulePositions());
         LimeLightHelpers.SetRobotOrientation(limeLight.getName(), drivetrain.getYaw().getDegrees(), 0, 0, 0, 0, 0);
-        mt2 = LimeLightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.getName());
+        LimeLightHelpers.PoseEstimate mt2 = LimeLightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.getName());
 
         boolean rejectVisionUpdate = false;
         if (Math.abs(drivetrain.gyro.getRate()) > 720) { 
@@ -55,16 +45,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             rejectVisionUpdate = true;
         } 
         if (!rejectVisionUpdate) {
-            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-            poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-            //SmartDashboard.putString("Bot Position MegaTag2", "" + mt2.pose);
-            //SmartDashboard.putData(mt2.pose);
-            // SmartDashboard.putString("Bot Position Combined", "" + this.getEstimatedPose());
-            // drivetrain.setPose(mt2.pose);
-            // RobotContainer.combined_field.setRobotPose(drivetrain.getPose());
+            currentEstimate = mt2.pose;
+            drivetrain.setPose(currentEstimate);
+        } else {
+            currentEstimate = drivetrain.getPose();
         }
 
-        RobotContainer.limelight_field.setRobotPose(mt2.pose);
-        RobotContainer.combined_field.setRobotPose(this.getEstimatedPose());
+        RobotContainer.estimatedField.setRobotPose(getEstimatedPose());
     }
 }

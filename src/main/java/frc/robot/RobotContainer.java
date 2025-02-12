@@ -118,18 +118,15 @@ public class RobotContainer {
   // Limelight Vision and Pose
   private final LimeLight limeLight = new LimeLight("limelight");
   private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drivetrain, limeLight);
-  public static Field2d limelight_field;
-  public static Field2d combined_field;
+  public static Field2d estimatedField;
 
   // climber Controls speeds
   double climberspeed = -.05;
  
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    limelight_field = new Field2d();
-    combined_field = new Field2d();
-    SmartDashboard.putData("Limelight Field", limelight_field); 
-    SmartDashboard.putData("Combined Field", combined_field);
+    estimatedField = new Field2d();
+    SmartDashboard.putData("Estimated Field", estimatedField);
 
     //pShooter.setEncoderPos(0.0);
     pIntake.setEncoderPos(0.0);
