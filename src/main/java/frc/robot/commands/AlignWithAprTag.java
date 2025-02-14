@@ -7,6 +7,8 @@ package frc.robot.commands;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,15 +21,13 @@ public class AlignWithAprTag extends Command {
   private LimeLight limeLight;
   private Drivetrain drivetrain;
   private Joystick controller;
-  private DoubleSupplier trigger;
   private int direction;
   
   /** Creates a new LockOn. */
-  public AlignWithAprTag(Drivetrain drivetrain, LimeLight limeLight, Joystick controller, DoubleSupplier trigger,int direction) {
+  public AlignWithAprTag(Drivetrain drivetrain, LimeLight limeLight, Joystick controller, int direction) {
     this.limeLight = limeLight;
     this.drivetrain = drivetrain;
     this.controller = controller;
-    this.trigger = trigger;
     this.direction = direction;
     addRequirements(drivetrain, limeLight);
   }
@@ -42,16 +42,11 @@ public class AlignWithAprTag extends Command {
   * y approaches 1.0.
   */
 
-
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    final double yawTolerance = 0.0;
-
     // Strafe Code
-    
-    
-    limeLight.updateTargetsList();
 
     // using both 4 and 7
     
@@ -69,11 +64,14 @@ public class AlignWithAprTag extends Command {
     //   index = index2;
     // }
 
-    double translationX = deadband(this.trigger.getAsDouble()*this.direction);
-    double translationY = 0.0;
-    Translation2d translation = new Translation2d(translationX, translationY).times(Constants.DrivetrainConstants.MAX_SPEED);
-    // double rotation = -controller.getRawAxis(XboxController.Axis.kRightX.value) * Constants.DrivetrainConstants.maxAngularVelocity;
+    double translationY = Constants.VisionConstants.alignDistance*this.direction;
+    double translationX = 0.0;
+
+    Translation2d translation = new Translation2d(translationX,translationY);
+
     double rotation = 0.0;
+    // double rotation = -controller.getRawAxis(XboxController.Axis.kRightX.value) * Constants.DrivetrainConstants.maxAngularVelocity;
+    // double rotation = 0.0;
 
     drivetrain.simpleDrive(
       translation,
@@ -107,20 +105,10 @@ public class AlignWithAprTag extends Command {
 
   }
 
-  public double deadband(double value) {
-    if (value >= 0.10) {
-      return (value - 0.10) / 0.90;
-    // } else if (value <= -0.10) {
-    //   return (value + 0.10) / 0.90;
-    } else {
-      return 0.0;
-    }
-  }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("FINISHED FR");
+    drivetrain.simpleDrive(new Translation2d(0.0,0.0), 0.0);
   }
 
   // Returns true when the command should end.

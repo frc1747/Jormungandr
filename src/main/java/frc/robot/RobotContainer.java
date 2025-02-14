@@ -123,18 +123,15 @@ public class RobotContainer {
   // Limelight Vision and Pose
   private final LimeLight limeLight = new LimeLight("limelight");
   private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drivetrain, limeLight);
-  public static Field2d limelight_field;
-  public static Field2d combined_field;
+  public static Field2d estimatedField;
 
   // climber Controls speeds
   double climberspeed = -.05;
  
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    limelight_field = new Field2d();
-    combined_field = new Field2d();
-    SmartDashboard.putData("Limelight Field", limelight_field); 
-    SmartDashboard.putData("Combined Field", combined_field);
+    estimatedField = new Field2d();
+    SmartDashboard.putData("Estimated Field", estimatedField);
 
     //pShooter.setEncoderPos(0.0);
     pIntake.setEncoderPos(0.0);
@@ -212,20 +209,20 @@ public class RobotContainer {
     // used to swicth the climber going up 0or down
 
     // Shooter
-    new JoystickButton(operator, XboxController.Button.kA.value)
-     .whileTrue(new Shoot(shooter , 1));
-    new JoystickButton(operator, XboxController.Button.kB.value)
-     .whileTrue(new Shoot(shooter , -1 ));
-    new JoystickButton(operator, XboxController.Button.kX.value)
-     .whileTrue(new ShooterFeed(feeder, intake, 1));
-    new JoystickButton(operator, XboxController.Button.kY.value)
-      .onTrue(new AdjustNote(feeder, intake));
+    // new JoystickButton(operator, XboxController.Button.kA.value)
+    //  .whileTrue(new Shoot(shooter , 1));
+    // new JoystickButton(operator, XboxController.Button.kB.value)
+    //  .whileTrue(new Shoot(shooter , -1 ));
+    // new JoystickButton(operator, XboxController.Button.kX.value)
+    //  .whileTrue(new ShooterFeed(feeder, intake, 1));
+    // new JoystickButton(operator, XboxController.Button.kY.value)
+    //   .onTrue(new AdjustNote(feeder, intake));
 
     // Strafe Code
-    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
-      .whileTrue(new AlignWithAprTag(drivetrain, limeLight, driver, leftTriggerDouble,-1));
-    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0))
-      .whileTrue(new AlignWithAprTag(drivetrain, limeLight, driver, rightTriggerDouble,1));
+    new JoystickButton(operator,XboxController.Button.kA.value)
+      .whileTrue(new AlignWithAprTag(drivetrain, limeLight, driver,-1));
+    new JoystickButton(operator,XboxController.Button.kB.value)
+      .whileTrue(new AlignWithAprTag(drivetrain, limeLight, driver,1));
     
     // // magic intake
     // new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))

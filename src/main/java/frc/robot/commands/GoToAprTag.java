@@ -12,7 +12,7 @@ import frc.robot.subsystems.LimeLight;
 
 /** An example command that uses an example subsystem. */
 public class GoToAprTag extends Command {
-    private static final int AprilTag = 0;
+        private final int AprilTag = 0;
         @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
         private final LimeLight limelight;
         private final Drivetrain drivetrain;
@@ -38,11 +38,6 @@ public class GoToAprTag extends Command {
         @Override
         public void execute() {
           final double yawTolerance = 0.0;
-      
-          limelight.updateTargetsList();
-      
-          final int tagIDchoice = (AprilTag);
-          int index = limelight.getTagIndex(AprilTag);
   }
 
 //   // Called every time the scheduler runs while the command is scheduled.

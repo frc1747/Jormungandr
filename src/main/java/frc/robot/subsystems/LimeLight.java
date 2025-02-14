@@ -16,6 +16,7 @@ public class LimeLight extends SubsystemBase {
     NetworkTableEntry xOffsetEntry;
     NetworkTableEntry yOffsetEntry;
     NetworkTableEntry areaEntry;
+    NetworkTableEntry poseAmbiguityEntry;
 
     public LimeLight(String name) {
         this.name = name;
@@ -23,6 +24,7 @@ public class LimeLight extends SubsystemBase {
         xOffsetEntry = table.getEntry("tx");
         yOffsetEntry = table.getEntry("ty");
         areaEntry = table.getEntry("ta");
+        poseAmbiguityEntry = table.getEntry("pa");
     }
 
     public String getName() {
@@ -41,25 +43,14 @@ public class LimeLight extends SubsystemBase {
         return areaEntry.getDouble(101.0);
     }
 
+    public double getPoseAmbiguity() {
+        return poseAmbiguityEntry.getDouble(-1);
+    }
+
     public void robotInit() {
       for (int port = 5800; port <= 5809; port ++) {
         PortForwarder.add(port+10, "limelight.local", port);
       }
-    }
-
-    public void updateTargetsList() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateTargetsList'");
-    }
-
-    public static int getTagIndex(int apriltag) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTagIndex'");
-    }
-
-    public double getYaw(int index) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getYaw'");
     }
     
 }

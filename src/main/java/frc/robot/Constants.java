@@ -208,7 +208,8 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-
+    // Distance to move robot in AlignWithAprTag
+    public static final double alignDistance = 0.165;
   }
 
   public static class AutoConstants {
