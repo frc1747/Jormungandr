@@ -11,7 +11,7 @@ public class ResetGyro extends Command {
   boolean done;
   Drivetrain drivetrain;
   
-  /** Creates a new ResetPigeon. */
+  /** Creates a new ResetGyro. */
   public ResetGyro(Drivetrain drivetrain) {
     done = false;
     this.drivetrain = drivetrain;

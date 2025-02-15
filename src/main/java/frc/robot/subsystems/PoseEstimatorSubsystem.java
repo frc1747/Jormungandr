@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.LimeLightHelpers;
 import frc.robot.RobotContainer;
+import frc.robot.Utilities;
 
 public class PoseEstimatorSubsystem extends SubsystemBase {
     private Drivetrain drivetrain;
@@ -39,13 +41,17 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         LimeLightHelpers.PoseEstimate mt2 = LimeLightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.getName());
 
         boolean rejectVisionUpdate = false;
+        if (mt2 == null) {
+            return;
+        }
+
         if (Math.abs(drivetrain.gyro.getRate()) > 720) { 
             rejectVisionUpdate = true;
         } else if (mt2.tagCount == 0) {
             rejectVisionUpdate = true;
         } 
         if (!rejectVisionUpdate) {
-            currentEstimate = mt2.pose;
+            currentEstimate = Utilities.average(mt2.pose, drivetrain.getPose());
             drivetrain.setPose(currentEstimate);
         } else {
             currentEstimate = drivetrain.getPose();
