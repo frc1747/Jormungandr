@@ -52,5 +52,15 @@ public class LimeLight extends SubsystemBase {
         PortForwarder.add(port+10, "limelight.local", port);
       }
     }
+
+    public void updateTargetsList() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateTargetsList'");
+    }
+
+    public int getTagIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTagIndex'");
+    }
     
 }
