@@ -39,6 +39,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         LimeLightHelpers.PoseEstimate mt2 = LimeLightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.getName());
         
         boolean rejectVisionUpdate = false;
+
+        if (mt2 == null) {
+            return;
+        }
+
         if (Math.abs(drivetrain.gyro.getRate()) > 720) { 
             rejectVisionUpdate = true;
         } else if (mt2.tagCount == 0) {

@@ -4,7 +4,10 @@
 
 package frc.robot.commands;
 
+import java.util.List;
+
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
@@ -12,33 +15,37 @@ import frc.robot.subsystems.LimeLight;
 
 /** An example command that uses an example subsystem. */
 public class GoToAprTag extends Command {
-        private final int AprilTag = 0;
-        @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-        private final LimeLight limelight;
-        private final Drivetrain drivetrain;
-        private final Joystick controller;
-      
-        /**
-         * Creates a new ExampleCommand.
-         *
-         * @param limelight The subsystem used by this command.
-         */
-        public GoToAprTag(LimeLight limelight, Drivetrain drivetrain, Joystick controller) {
-          this.limelight = limelight;
-          this.drivetrain = drivetrain;
-          this.controller = controller;
-          // Use addRequirements() here to declare subsystem dependencies.
-          addRequirements(limelight, drivetrain);
-        }
-      
-        // Called when the command is initially scheduled.
-        @Override
-        public void initialize() {}
-      
-        @Override
-        public void execute() {
-          final double yawTolerance = 0.0;
-  }
+                private final int AprilTag = 0;
+                @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+                private final LimeLight limelight;
+                private final Drivetrain drivetrain;
+                private final Joystick controller;
+              
+                /**
+                 * Creates a new ExampleCommand.
+                 *
+                 * @param limelight The subsystem used by this command.
+                 */
+                public GoToAprTag(LimeLight limelight, Drivetrain drivetrain, Joystick controller) {
+                  this.limelight = limelight;
+                  this.drivetrain = drivetrain;
+                  this.controller = controller;
+                  // Use addRequirements() here to declare subsystem dependencies.
+                  addRequirements(limelight, drivetrain);
+                }
+              
+                // Called when the command is initially scheduled.
+                @Override
+                public void initialize() {}
+              
+                @Override
+                public void execute() {
+                  final double yawTolerance = 0.0;
+                  Pose2d bot2d;
+                  List<Pose2d> poselist;
+                  public final Pose2d nearest = bot2d.nearest(poselist);
+                  
+                }
 
 //   // Called every time the scheduler runs while the command is scheduled.
 //   @Override
