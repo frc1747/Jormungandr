@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.AdjustNote;
 import frc.robot.commands.AlignWithAprTag;
+import frc.robot.commands.GoToAprTag;
 import frc.robot.commands.Teleop.CleanIntake;
 import frc.robot.commands.Teleop.FullIntake;
 import frc.robot.commands.Teleop.Shoot;
@@ -35,6 +36,7 @@ import frc.robot.subsystems.PivotShooter;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Shooter;
 
+import java.lang.ModuleLayer.Controller;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -243,6 +245,9 @@ public class RobotContainer {
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetIntake(pIntake));
+
+    new JoystickButton(operator,XboxController.Button.kA.value)
+      .onTrue(new GoToAprTag(limeLight, drivetrain, operator));
   }
   
 

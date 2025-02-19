@@ -34,11 +34,6 @@ public class LimeLight extends SubsystemBase {
         return name;
     }
 
-    // for GoToAprTag
-    public List poseList() {
-        return list;
-    }
-
     public double getXOffset() {
         return xOffsetEntry.getDouble(361.0);
     }

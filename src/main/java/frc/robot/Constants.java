@@ -3,10 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -210,7 +215,30 @@ public final class Constants {
   public static class VisionConstants {
     // Distance to move robot in AlignWithAprTag
     public static final double alignDistance = 0.165;
+    public static final List<Pose2d> poseList = listMaker();
+    
+    private static List<Pose2d> listMaker(){
+      List<Pose2d> poseList = new ArrayList<Pose2d>();
+      
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+      poseList.add(new Pose2d());
+
+      return poseList;
+    }
+
+       
   }
+
 
   public static class AutoConstants {
     
