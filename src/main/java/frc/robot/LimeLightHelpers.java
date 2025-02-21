@@ -793,7 +793,7 @@ public class LimeLightHelpers {
      */
     public static void printPoseEstimate(PoseEstimate pose) {
         if (pose == null) {
-            System.out.println("No PoseEstimate available.");
+            //System.out.println("No PoseEstimate available.");
             return;
         }
     

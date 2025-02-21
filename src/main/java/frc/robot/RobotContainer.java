@@ -247,7 +247,7 @@ public class RobotContainer {
       .onTrue(new ResetIntake(pIntake));
 
     new JoystickButton(operator,XboxController.Button.kA.value)
-      .onTrue(new GoToAprTag(limeLight, drivetrain, operator));
+      .whileTrue(new GoToAprTag(limeLight, drivetrain, operator, poseEstimator));
   }
   
 

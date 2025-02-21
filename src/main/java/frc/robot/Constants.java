@@ -220,18 +220,18 @@ public final class Constants {
     private static List<Pose2d> listMaker(){
       List<Pose2d> poseList = new ArrayList<Pose2d>();
       
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
-      poseList.add(new Pose2d());
+      poseList.add(new Pose2d(15.11, 3.82, new Rotation2d(0.0))); // April Tag 7, Left
+      poseList.add(new Pose2d(15.10, 4.14, new Rotation2d(0.0))); // April Tag 7, Right
+      // poseList.add(new Pose2d()); // April Tag 8, Left
+      // poseList.add(new Pose2d()); // April Tag 8, Right
+      // poseList.add(new Pose2d());
+      // poseList.add(new Pose2d());
+      // poseList.add(new Pose2d());
+      // poseList.add(new Pose2d());
+      // poseList.add(new Pose2d());
+      // poseList.add(new Pose2d());
+      // poseList.add(new Pose2d());
+      // poseList.add(new Pose2d());
 
       return poseList;
     }

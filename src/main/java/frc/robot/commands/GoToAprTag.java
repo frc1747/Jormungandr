@@ -10,11 +10,13 @@ import java.util.List;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimeLight;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class GoToAprTag extends Command {
@@ -24,16 +26,18 @@ public class GoToAprTag extends Command {
       private final Drivetrain drivetrain;
       private final Joystick controller;
       private final List<Pose2d> poseList;
+      private final PoseEstimatorSubsystem poseEstimator;
 
       /**
        * Creates a new ExampleCommand.
        *
        * @param limelight The subsystem used by this command.
        */
-      public GoToAprTag(LimeLight limelight, Drivetrain drivetrain, Joystick controller) {
+      public GoToAprTag(LimeLight limelight, Drivetrain drivetrain, Joystick controller, PoseEstimatorSubsystem poseEstimator) {
         this.limelight = limelight;
         this.drivetrain = drivetrain;
         this.controller = controller;
+        this.poseEstimator = poseEstimator;
       
         this.poseList = Constants.VisionConstants.poseList;
 
@@ -43,20 +47,21 @@ public class GoToAprTag extends Command {
     
       // Called when the command is initially scheduled.
       @Override
-      public void initialize() {}
+      public void initialize() {
+        System.out.println(poseEstimator.getEstimatedPose());
+
+        final double yawTolerance = 0.0;
+
+        Pose2d bot2d = poseEstimator.getEstimatedPose();
+        Pose2d nearest = bot2d.nearest(this.poseList);
+
+        // Translation2d deltaMove = nearest.getTranslation().minus(bot2d.getTranslation());
+
+        drivetrain.simpleDrive(nearest.getTranslation(), nearest.getRotation().getDegrees());
+      }
     
       @Override
-      public void execute() {
-        System.out.println(drivetrain.getPose());
-
-        // final double yawTolerance = 0.0;
-
-        // Pose2d bot2d = drivetrain.getPose();
-        // Pose2d nearest = bot2d.nearest(this.poseList);
-
-        // drivetrain.simpleDrive(nearest.getTranslation(), nearest.getRotation().getDegrees());
-
-      }
+      public void execute() {}
 
 //   // Called every time the scheduler runs while the command is scheduled.
 //   @Override
