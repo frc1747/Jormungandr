@@ -5,6 +5,8 @@
 package frc.robot;
 
 import frc.robot.commands.AdjustNote;
+import frc.robot.commands.GoToPose2d;
+import frc.robot.commands.GoToPoseTest;
 import frc.robot.commands.Teleop.CleanIntake;
 import frc.robot.commands.Teleop.FullIntake;
 import frc.robot.commands.Teleop.Shoot;
@@ -23,6 +25,8 @@ import frc.robot.util.Alert;
 import frc.robot.util.Alert.AlertType;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -227,6 +231,9 @@ public class RobotContainer {
     
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetGyro(drivetrain));
+
+    new JoystickButton(driver, XboxController.Button.kA.value)
+      .onTrue(new GoToPoseTest(poseEstimator, drivetrain, new Pose2d(new Translation2d(4.86, 5.71), new Rotation2d(3.07))));
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetIntake(pIntake));
