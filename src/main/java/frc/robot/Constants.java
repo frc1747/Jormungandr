@@ -6,16 +6,21 @@ package frc.robot;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -28,6 +33,10 @@ import frc.lib.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class Robot {
+    public static NetworkTableInstance NT_INSTANCE;
+  }
+
   public static class ControllerConstants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
@@ -234,6 +243,22 @@ public final class Constants {
       // poseList.add(new Pose2d());
 
       return poseList;
+    }
+
+    public static Function<Double, Matrix<N3, N1>> VISION_STD_DEV_MULTITAG_FUNCTION;
+    public static final class LimelightConstants {
+      public static final double MIN_TAG_DIST_TO_BE_FAR = 3.0;
+
+	public static String LIMELIGHT_NT_NAME;
+
+      public static double LL_FORWARD;
+      public static double LL_RIGHT;
+      public static double LL_UP;
+      public static double LL_ROLL;
+      public static double LL_PITCH;
+      public static double LL_YAW;
+
+      public static double LL_MAX_TAG_CLEAR_DIST;
     }
 
        
