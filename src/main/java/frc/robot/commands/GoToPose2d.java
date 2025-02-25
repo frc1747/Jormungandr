@@ -71,7 +71,7 @@ public class GoToPose2d extends Command {
     //   driveTranslation = new Translation2d(1, new Rotation2d(Math.atan(difference.getY()/difference.getX())));
     // }
 
-    drivetrain.simpleDrive(difference.getTranslation(), difference.getRotation().getDegrees());
+    drivetrain.simpleDrive(difference.getTranslation(), poseEstimator.getEstimatedPose().getRotation().getDegrees());
   }
  
   // Called once the command ends or is interrupted.
