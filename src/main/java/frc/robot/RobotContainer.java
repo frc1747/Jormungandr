@@ -233,7 +233,7 @@ public class RobotContainer {
       .onTrue(new ResetGyro(drivetrain));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
-      .onTrue(new GoToPoseTest(poseEstimator, drivetrain, new Pose2d(new Translation2d(4.86, 5.71), new Rotation2d(3.07))));
+      .onTrue(new GoToPose2d(poseEstimator, drivetrain, new Pose2d(new Translation2d(4.86, 5.71), new Rotation2d(3.07))));
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetIntake(pIntake));
