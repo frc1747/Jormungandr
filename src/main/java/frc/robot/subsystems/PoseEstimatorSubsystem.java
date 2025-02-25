@@ -59,6 +59,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         RobotContainer.estimatedField.setRobotPose(getEstimatedPose());
 
-        System.out.println(getEstimatedPose());
+        //System.out.println(getEstimatedPose());
     }
 }

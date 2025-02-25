@@ -45,6 +45,7 @@ public class GoToPose2d extends Command {
   public void execute() {
     // transform2d that represents difference between current estimated pose and desired pose
     difference = poseEstimator.getEstimatedPose().minus(desiredPose);
+    System.out.println(difference);
     
     // distance to desired pose translation in meters
     diffTransMagnitude = Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2));
@@ -62,7 +63,12 @@ public class GoToPose2d extends Command {
     if (angularVelocityMultiplier < -1) angularVelocityMultiplier = -1;
 
     // full speed translation in the direction of the desired pose translation
-    Translation2d driveTranslation = new Translation2d(1, new Rotation2d(Math.atan(difference.getY()/difference.getX())));
+    Translation2d driveTranslation;
+    if (difference.getX() >= 0) {
+      driveTranslation = new Translation2d(1, new Rotation2d(-Math.atan(difference.getY()/difference.getX())));
+    } else {
+      driveTranslation = new Translation2d(1, new Rotation2d(Math.atan(difference.getY()/difference.getX())));
+    }
 
     drivetrain.simpleDrive(driveTranslation.times(velocityMultiplier), angularVelocityMultiplier);
   }
