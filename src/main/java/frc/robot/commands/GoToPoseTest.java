@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -18,6 +19,7 @@ public class GoToPoseTest extends Command {
     Pose2d desiredPose;
     Transform2d difference;
     double diffTransMagnitude;
+    PIDController pid;
 
   /** Creates a new GoToPoseTest. */
   public GoToPoseTest(PoseEstimatorSubsystem poseEstimator, Drivetrain drivetrain, Pose2d desiredPose) {
@@ -25,6 +27,7 @@ public class GoToPoseTest extends Command {
     this.drivetrain = drivetrain;
     // the pose we want to end up at
     this.desiredPose = desiredPose;
+    this.pid = new PIDController(0.5, 0.001, 0.01);
     addRequirements(poseEstimator);
   }
 
@@ -36,7 +39,7 @@ public class GoToPoseTest extends Command {
     // magnitude in meters of difference between current estimated pose of robot and the desired pose
     diffTransMagnitude = Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2));
   }
-  
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -46,13 +49,10 @@ public class GoToPoseTest extends Command {
     // distance to desired pose translation in meters
     diffTransMagnitude = Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2));
 
-    // velocityMultiplier [0.01, 1] tells robot how quickly to move towards desired pose translation
-    double velocityMultiplier = (Math.sqrt(diffTransMagnitude / 1)); // starts slowing down within 1 meter
-    if (velocityMultiplier > 1) velocityMultiplier = 1;
-    if (velocityMultiplier < 0.05) velocityMultiplier = 0.05;
-
-    // full speed translation in the direction of the desired pose translation
+    // Velocity translation of magnitude 1 and multiplier to be applied
     Translation2d driveTranslation = new Translation2d(1, new Rotation2d(Math.atan2(difference.getY(),difference.getX())));
+    double velocityMultiplier = pid.calculate(-diffTransMagnitude);
+    
     drivetrain.simpleDrive(driveTranslation.times(velocityMultiplier), 0);
   }
 

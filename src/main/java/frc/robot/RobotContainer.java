@@ -16,6 +16,7 @@ import frc.robot.commands.Teleop.Shooterarm;
 import frc.robot.commands.Teleop.StowIntake;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ResetIntake;
+import frc.robot.commands.Test;
 import frc.robot.commands.Autoscommands.IntakeAutos;
 import frc.robot.commands.Autoscommands.ShootAuto;
 import frc.robot.commands.Teleop.TeleopSwerve;
@@ -235,6 +236,9 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value)
       .whileTrue(new GoToPoseTest(poseEstimator, drivetrain, new Pose2d(new Translation2d(4.86, 5.71), new Rotation2d(3.07))));
 
+    // new JoystickButton(driver, XboxController.Button.kA.value)
+    //   .whileTrue(new Test());
+      
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetIntake(pIntake));
   }
