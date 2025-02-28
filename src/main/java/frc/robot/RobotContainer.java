@@ -5,8 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AdjustNote;
-import frc.robot.commands.GoToPose2d;
-import frc.robot.commands.GoToPoseTest;
+import frc.robot.commands.GoToPose2D;
 import frc.robot.commands.Teleop.CleanIntake;
 import frc.robot.commands.Teleop.FullIntake;
 import frc.robot.commands.Teleop.Shoot;
@@ -234,7 +233,7 @@ public class RobotContainer {
       .onTrue(new ResetGyro(drivetrain));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
-      .whileTrue(new GoToPoseTest(poseEstimator, drivetrain, new Pose2d(new Translation2d(4.86, 5.71), new Rotation2d(3.07))));
+      .whileTrue(new GoToPose2D(poseEstimator, drivetrain, new Pose2d(new Translation2d(4.86, 5.71), new Rotation2d(3.07))));
 
     // new JoystickButton(driver, XboxController.Button.kA.value)
     //   .whileTrue(new Test());
