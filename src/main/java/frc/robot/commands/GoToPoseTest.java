@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
+import frc.robot.Constants;
 
 public class GoToPoseTest extends Command {
     PoseEstimatorSubsystem poseEstimator;
@@ -27,7 +28,7 @@ public class GoToPoseTest extends Command {
     this.drivetrain = drivetrain;
     // the pose we want to end up at
     this.desiredPose = desiredPose;
-    this.pid = new PIDController(0.5, 0.001, 0.01);
+    this.pid = new PIDController(0.6, 0.01, 0.00);
     addRequirements(poseEstimator);
   }
 
@@ -50,7 +51,7 @@ public class GoToPoseTest extends Command {
     diffTransMagnitude = Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2));
 
     // Velocity translation of magnitude 1 and multiplier to be applied
-    Translation2d driveTranslation = new Translation2d(1, new Rotation2d(Math.atan2(difference.getY(),difference.getX())));
+    Translation2d driveTranslation = new Translation2d(Constants.DrivetrainConstants.MAX_SPEED, new Rotation2d(Math.atan2(difference.getY(),difference.getX())));
     double velocityMultiplier = pid.calculate(-diffTransMagnitude);
     
     drivetrain.simpleDrive(driveTranslation.times(velocityMultiplier), 0);
@@ -66,7 +67,7 @@ public class GoToPoseTest extends Command {
   @Override
   public boolean isFinished() {
     // ends command if the robot is within 10 cm
-    if (diffTransMagnitude > 0.1) {
+    if (diffTransMagnitude > 0.02) {
         return false;
     } else {
         return true;
