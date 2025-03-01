@@ -31,8 +31,8 @@ public class GoToPose2d extends Command {
     this.drivetrain = drivetrain;
     // the pose we want to end up at
     this.desiredPose = desiredPose;
-    this.transPid = new PIDController(0.5, 0.0001, 0.00);
-    this.rotPid = new PIDController(0.35, 0.05, 0.01);
+    this.transPid = new PIDController(0.5, 0.0001, 0.0);
+    this.rotPid = new PIDController(0.5, 0.0001, 0.0);
     addRequirements(poseEstimator);
   }
 
@@ -64,6 +64,8 @@ public class GoToPose2d extends Command {
     // Angular velocity rotation and multiplier to be applied
     diffRotMagnitude = difference.getRotation().getRadians();
     double angularVelocityMultiplier = rotPid.calculate(-diffRotMagnitude);
+    if (angularVelocityMultiplier > 1) angularVelocityMultiplier = 1;
+    if (angularVelocityMultiplier < -1) angularVelocityMultiplier = -1;
     System.out.println(angularVelocityMultiplier);
 
     drivetrain.simpleDrive(driveTranslation.times(velocityMultiplier), Constants.DrivetrainConstants.maxAngularVelocity*angularVelocityMultiplier);

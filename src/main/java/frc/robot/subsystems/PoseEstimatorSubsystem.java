@@ -66,12 +66,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         RobotContainer.estimatedField.setRobotPose(getEstimatedPose());
 
 
-        // green light if the robot is within 5 cm ans 2 degrees of desired pose
+        // green light if the robot is within 5 cm ans 18 degrees of desired pose
         if (desiredPose != null) {
             Transform2d difference = desiredPose.minus(getEstimatedPose());
             if (Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2)) > 0.02) {
                 SmartDashboard.putBoolean("In Position", false);
-            } else if (difference.getRotation().getRadians() > Math.PI/45) {
+            } else if (difference.getRotation().getRadians() > Math.PI/120) {
                 SmartDashboard.putBoolean("In Position", false);
             } else {
                 SmartDashboard.putBoolean("In Position", true);
