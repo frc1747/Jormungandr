@@ -57,7 +57,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             rejectVisionUpdate = true;
         } 
         if (!rejectVisionUpdate) {
-            currentEstimate = Utilities.average(mt2.pose, drivetrain.getPose());
+            currentEstimate = mt2.pose;
             drivetrain.setPose(currentEstimate);
         } else {
             currentEstimate = drivetrain.getPose();
@@ -66,7 +66,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         RobotContainer.estimatedField.setRobotPose(getEstimatedPose());
 
 
-        // green light if the robot is within 5 cm ans 18 degrees of desired pose
+        // green light if the robot is within 2 cm and 1.5 degrees of desired pose
         if (desiredPose != null) {
             Transform2d difference = desiredPose.minus(getEstimatedPose());
             if (Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2)) > 0.02) {
