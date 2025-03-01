@@ -233,7 +233,7 @@ public class RobotContainer {
       .onTrue(new ResetGyro(drivetrain));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
-      .whileTrue(new GoToPose2d(poseEstimator, drivetrain, new Pose2d(new Translation2d(4.86, 5.71), new Rotation2d(0))));
+      .whileTrue(new GoToPose2d(poseEstimator, drivetrain, new Pose2d(new Translation2d(7.67, 4.06), new Rotation2d(-3.13))));
 
     // new JoystickButton(driver, XboxController.Button.kA.value)
     //   .whileTrue(new Test());

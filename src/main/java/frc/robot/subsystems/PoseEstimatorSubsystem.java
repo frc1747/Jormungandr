@@ -79,5 +79,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         } else {
             SmartDashboard.putBoolean("In Position", false);
         }
+
+        // System.out.println(getEstimatedPose());
     }
 }
