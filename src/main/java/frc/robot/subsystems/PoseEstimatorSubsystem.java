@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,6 +24,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     private Drivetrain drivetrain;
     private LimeLight limeLight;
     private Pose2d currentEstimate;
+    private Pose2d desiredPose;
 
     /** Creates a new PoseEstimatorSubsystem. */
     public PoseEstimatorSubsystem(Drivetrain drivetrain, LimeLight limeLight) {
@@ -33,6 +35,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
     public Pose2d getEstimatedPose() {
         return currentEstimate;
+    }
+
+    public void setDesiredPose(Pose2d desiredPose) {
+        this.desiredPose = desiredPose;
     }
 
     @Override
@@ -59,6 +65,19 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         RobotContainer.estimatedField.setRobotPose(getEstimatedPose());
 
-        //System.out.println(getEstimatedPose());
+
+        // green light if the robot is within 5 cm ans 2 degrees of desired pose
+        if (desiredPose != null) {
+            Transform2d difference = desiredPose.minus(getEstimatedPose());
+            if (Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2)) > 0.02) {
+                SmartDashboard.putBoolean("In Position", false);
+            } else if (difference.getRotation().getRadians() > Math.PI/45) {
+                SmartDashboard.putBoolean("In Position", false);
+            } else {
+                SmartDashboard.putBoolean("In Position", true);
+            }
+        } else {
+            SmartDashboard.putBoolean("In Position", false);
+        }
     }
 }
