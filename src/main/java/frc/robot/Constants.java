@@ -79,22 +79,22 @@ public final class Constants {
   }
 
   public static class FeederConstants {
-      public static final int BACK = 53;
+      public static final int BACK = 61;
       public static final double TRANSITION_SPEED = 0.70;
       public static final double ADJUST_NOTE_SPEED = 0.40;
       public static final int LIMIT_SWITCH = 1;
       public static final int ADJUST_NOTE_MILLIS = 50;
   }
 
-  public static class ClimberConstants {
-    public static final int LEFT = 61;
-    public static final int RIGHT = 62;
+  // public static class ClimberConstants {
+  //   public static final int LEFT = 61;
+  //   public static final int RIGHT = 62;
 
-    public static final double CLIMBER_SPEED = 0.75;
-    public static final double UP_LIMIT = 275000;
+  //   public static final double CLIMBER_SPEED = 0.75;
+  //   public static final double UP_LIMIT = 275000;
 
-    public static final double SLOW_LIMIT = 50000;
-  }
+  //   public static final double SLOW_LIMIT = 50000;
+  // }
   
   public static class DrivetrainConstants {
     public static final COTSFalconSwerveConstants chosenModule = COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
