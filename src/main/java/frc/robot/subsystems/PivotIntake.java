@@ -32,7 +32,7 @@ public class PivotIntake extends SubsystemBase {
   public void configPID() {
     hinge.getConfigurator().apply(new TalonFXConfiguration()
       .withSlot0(new Slot0Configs()
-        .withKP(0.05)
+        .withKP(0.025)
         .withKI(0.0)
         .withKD(0.0)
         .withKA(getPosition()) // I don't know which feedforward type to use here

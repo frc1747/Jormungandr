@@ -41,10 +41,10 @@ public final class Constants {
     public static final double CLEAN = 10;
     public static final double SLOW_POSITION = 10;
 
-    public static final double IN_SPEED = 0.5; // was 1.00
-    public static final double OUT_SPEED = -0.4; // was -0.75
+    public static final double IN_SPEED = 0.4; // was 1.00
+    public static final double OUT_SPEED = -0.3; // was -0.75
 
-    public static final double ROLLER_SPEED = 0.80; // was .9
+    public static final double ROLLER_SPEED = 0.60; // was .8
     public static final double ROLLER_SPEED_CLEAN = 1.0; 
     public static final double PIVOT_IN_SPEED = 0.6;
     public static final double PIVOT_IN_SPEED_LOW = 0.3;
@@ -150,8 +150,8 @@ public final class Constants {
     public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
     // TODO: Tune these later
-    public static final double MAX_SPEED = 4.1;  // Max speed in m/s
-    public static final double MAX_ACCEL = 4.1;  // Max acceleration in m/s
+    public static final double MAX_SPEED = 2.1;  // Max speed in m/s
+    public static final double MAX_ACCEL = 2.1;  // Max acceleration in m/s
     public static final double maxAngularVelocity = 10.0;  // Rad/s
 
     // TODO: Tune these later
