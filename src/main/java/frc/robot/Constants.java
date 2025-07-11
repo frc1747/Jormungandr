@@ -37,7 +37,7 @@ public final class Constants {
     public static final int LIMIT_SWITCH = 1;
 
     public static final double STOWED = 0.0;
-    public static final double DROPPED = 34; // was 64000
+    public static final double DROPPED = 50; // was 64000
     public static final double CLEAN = 10;
     public static final double SLOW_POSITION = 10;
 
