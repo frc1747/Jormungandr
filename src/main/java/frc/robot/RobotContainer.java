@@ -58,11 +58,11 @@ public class RobotContainer {
 
   // subsystems
   //public final PivotShooter pShooter = new PivotShooter();
-  public final Shooter shooter = new Shooter();
-  public final PivotIntake pIntake = new PivotIntake();
-  public final Intake intake = new Intake();
+  // public final Shooter shooter = new Shooter();
+  // public final PivotIntake pIntake = new PivotIntake();
+  // public final Intake intake = new Intake();
   public final Drivetrain drivetrain = new Drivetrain();
-  public final Feeder feeder = new Feeder();
+  // public final Feeder feeder = new Feeder();
 
   // Braden failing to code
 
@@ -89,22 +89,22 @@ public class RobotContainer {
 
   // Alerts
   private final Alert driverDisconnectedAlert = new Alert("Driver controller is disconnected (port " + driver.getPort() + ").", AlertType.WARNING);
-  private final Alert operatorDisconnectedAlert = new Alert("Operator controller is disconnected (port " + operator.getPort() + ").", AlertType.WARNING);
+  // private final Alert operatorDisconnectedAlert = new Alert("Operator controller is disconnected (port " + operator.getPort() + ").", AlertType.WARNING);
 
   // BooleanSuppliers
-  private final BooleanSupplier rightTrigger = () -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > Short.MAX_VALUE - 10;
-  private final BooleanSupplier leftTrigger = () -> operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > Short.MAX_VALUE - 10;
-  private final BooleanSupplier rightBumper = () -> operator.getRawAxis(XboxController.Button.kRightBumper.value) == 1;
-  private final BooleanSupplier leftBumper = () -> operator.getRawAxis(XboxController.Button.kLeftBumper.value) == 1;
-  private final BooleanSupplier toggleManual = () -> operator.getRawAxis(XboxController.Button.kStart.value) == 1; 
-  private  BooleanSupplier b_intakeMovement = () -> Math.abs(operator.getRawAxis(XboxController.Axis.kLeftY.value)) > 0;
-  private  BooleanSupplier b_intakein_out = () -> Math.abs(operator.getRawAxis(XboxController.Axis.kLeftX.value)) > 0;
-  private final BooleanSupplier b_shooterarm = () -> Math.abs(operator.getRawAxis(XboxController.Axis.kRightY.value)) != 0;
+  // private final BooleanSupplier rightTrigger = () -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > Short.MAX_VALUE - 10;
+  // private final BooleanSupplier leftTrigger = () -> operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > Short.MAX_VALUE - 10;
+  // private final BooleanSupplier rightBumper = () -> operator.getRawAxis(XboxController.Button.kRightBumper.value) == 1;
+  // private final BooleanSupplier leftBumper = () -> operator.getRawAxis(XboxController.Button.kLeftBumper.value) == 1;
+  // private final BooleanSupplier toggleManual = () -> operator.getRawAxis(XboxController.Button.kStart.value) == 1; 
+  // private  BooleanSupplier b_intakeMovement = () -> Math.abs(operator.getRawAxis(XboxController.Axis.kLeftY.value)) > 0;
+  // private  BooleanSupplier b_intakein_out = () -> Math.abs(operator.getRawAxis(XboxController.Axis.kLeftX.value)) > 0;
+  // private final BooleanSupplier b_shooterarm = () -> Math.abs(operator.getRawAxis(XboxController.Axis.kRightY.value)) != 0;
 
   // Double Suplpliers
-  private final DoubleSupplier intakeMovement = () -> operator.getRawAxis(XboxController.Axis.kLeftY.value);
-  private final DoubleSupplier intakein_out = () -> operator.getRawAxis(XboxController.Axis.kLeftX.value);
-  private final DoubleSupplier shooterarm = () -> operator.getRawAxis(XboxController.Axis.kRightY.value);
+  // private final DoubleSupplier intakeMovement = () -> operator.getRawAxis(XboxController.Axis.kLeftY.value);
+  // private final DoubleSupplier intakein_out = () -> operator.getRawAxis(XboxController.Axis.kLeftX.value);
+  // private final DoubleSupplier shooterarm = () -> operator.getRawAxis(XboxController.Axis.kRightY.value);
   private boolean Toggle;
 
   // autos
@@ -120,7 +120,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     //pShooter.setEncoderPos(0.0);
-    pIntake.setEncoderPos(0.0);
+    // pIntake.setEncoderPos(0.0);
 
     DriverStation.silenceJoystickConnectionWarning(true);
     // Setup Logging
@@ -136,18 +136,18 @@ public class RobotContainer {
         () -> robotCentric.getAsBoolean()
       )
     );
-    pIntake.setDefaultCommand(
-      new intakeMove(pIntake, intakeMovement));
+    // pIntake.setDefaultCommand(
+    //   new intakeMove(pIntake, intakeMovement));
     
     //intake.setDefaultCommand(
     //   new Intakeshoot(intake, intakein_out));
 
 
     // Braden's remode sick day code UNTESTED
-    NamedCommands.registerCommand("Floor pick up", new IntakeAutos(intake, pIntake));
-    NamedCommands.registerCommand("stow", new StowIntake(intake, pIntake));
-// imports needed 
-    NamedCommands.registerCommand("shoot", new ShootAuto(shooter, intake,feeder , "shoot"));
+//     NamedCommands.registerCommand("Floor pick up", new IntakeAutos(intake, pIntake));
+//     NamedCommands.registerCommand("stow", new StowIntake(intake, pIntake));
+// // imports needed 
+//     NamedCommands.registerCommand("shoot", new ShootAuto(shooter, intake,feeder , "shoot"));
 
     
       // Configure the trigger bindings
@@ -195,32 +195,32 @@ public class RobotContainer {
     // used to swicth the climber going up 0or down
 
     // Shooter
-    new JoystickButton(operator, XboxController.Button.kA.value)
-     .whileTrue(new Shoot(shooter , 1));
-    new JoystickButton(operator, XboxController.Button.kB.value)
-     .whileTrue(new Shoot(shooter , -1 ));
-    new JoystickButton(operator, XboxController.Button.kX.value)
-     .whileTrue(new ShooterFeed(feeder, intake, 1));
-    new JoystickButton(operator, XboxController.Button.kY.value)
-      .onTrue(new AdjustNote(feeder, intake));
+    // new JoystickButton(operator, XboxController.Button.kA.value)
+    //  .whileTrue(new Shoot(shooter , 1));
+    // new JoystickButton(operator, XboxController.Button.kB.value)
+    //  .whileTrue(new Shoot(shooter , -1 ));
+    // new JoystickButton(operator, XboxController.Button.kX.value)
+    //  .whileTrue(new ShooterFeed(feeder, intake, 1));
+    // new JoystickButton(operator, XboxController.Button.kY.value)
+    //   .onTrue(new AdjustNote(feeder, intake));
     
     // magic intake
-    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
-      .whileTrue(new FullIntake(intake, pIntake, feeder, shooter))
-      .onFalse(new StowIntake(intake, pIntake));
+    // new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0))
+    //   .whileTrue(new FullIntake(intake, pIntake, feeder, shooter))
+    //   .onFalse(new StowIntake(intake, pIntake));
       //.whileTrue(new FloorPickup(intake, pIntake));
       //.whileFalse(new StowIntake(intake, pIntake));
     
     // clean intake
-    new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0))
-      .whileTrue(new CleanIntake(pIntake, intake))
-      .onFalse(new StowIntake(intake, pIntake));
+    // new Trigger(() -> (operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0))
+    //   .whileTrue(new CleanIntake(pIntake, intake))
+    //   .onFalse(new StowIntake(intake, pIntake));
     
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
       .onTrue(new ResetGyro(drivetrain));
 
-    new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
-      .onTrue(new ResetIntake(pIntake));
+    // new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
+    //   .onTrue(new ResetIntake(pIntake));
   }
   
 
@@ -233,7 +233,7 @@ public class RobotContainer {
     boolean operatorConnected = DriverStation.isJoystickConnected(operator.getPort());
 
     driverDisconnectedAlert.set(!driverConnected);
-    operatorDisconnectedAlert.set(!operatorConnected);
+    // operatorDisconnectedAlert.set(!operatorConnected);
   }
 
   /**
