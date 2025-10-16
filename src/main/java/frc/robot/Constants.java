@@ -208,7 +208,8 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-
+    public static final double[] defaultHSV = {0,0,0};
+    public static final double[][] HSVRange = {{9, 125, 91}, {19, 155, 121}};
   }
 
   public static class AutoConstants {
