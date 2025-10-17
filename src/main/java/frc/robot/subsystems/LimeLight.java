@@ -2,10 +2,13 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.LimeLightHelpers;
 import frc.robot.Constants.VisionConstants;
+
+import javax.sound.midi.SysexMessage;
 
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
@@ -20,7 +23,6 @@ public class LimeLight extends SubsystemBase {
     NetworkTableEntry yOffsetEntry;
     NetworkTableEntry areaEntry;
     NetworkTableEntry poseAmbiguityEntry;
-    NetworkTableEntry crosshairHSV;
     public LimeLight(String name) {
         this.name = name;
         table = NetworkTableInstance.getDefault().getTable(name);
@@ -28,7 +30,6 @@ public class LimeLight extends SubsystemBase {
         yOffsetEntry = table.getEntry("ty");
         areaEntry = table.getEntry("ta");
         poseAmbiguityEntry = table.getEntry("pa");
-        crosshairHSV = table.getEntry("tc");
     }
 
     public String getName() {
@@ -52,7 +53,7 @@ public class LimeLight extends SubsystemBase {
     }
     
     public double[] getCrosshairHSV() {
-        return crosshairHSV.getDoubleArray(VisionConstants.defaultHSV);
+        return LimeLightHelpers.getTargetColor(this.name);
     }
 
     public void robotInit() {
@@ -64,8 +65,10 @@ public class LimeLight extends SubsystemBase {
     @Override
     public void periodic() {
         double[] currentHSV = getCrosshairHSV();
-        SmartDashboard.putNumberArray("Crosshair HSV", currentHSV);
-        if (currentHSV[0] >= VisionConstants.HSVRange[0][0] && currentHSV[0] <= VisionConstants.HSVRange[1][0] && currentHSV[1] >= VisionConstants.HSVRange[0][1] && currentHSV[1] <= VisionConstants.HSVRange[1][1] && currentHSV[2] >= VisionConstants.HSVRange[0][2] && currentHSV[2] <= VisionConstants.HSVRange[1][2]) {
+        SmartDashboard.putNumber("Crosshair Hue", currentHSV[0] * 180);
+        SmartDashboard.putNumber("Crosshair Saturation", currentHSV[1] * 255);
+        SmartDashboard.putNumber("Crosshair Value", currentHSV[2] * 255);
+        if (currentHSV[0] * 180  >= VisionConstants.HSVRange[0][0] && currentHSV[0] * 180 <= VisionConstants.HSVRange[1][0] && currentHSV[1] * 255 >= VisionConstants.HSVRange[0][1] && currentHSV[1]  * 255 <= VisionConstants.HSVRange[1][1] && currentHSV[2] * 255 >= VisionConstants.HSVRange[0][2] && currentHSV[2] * 255 <= VisionConstants.HSVRange[1][2]) {
             System.out.println("YAYAY");
         }
     }    
