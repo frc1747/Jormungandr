@@ -23,6 +23,7 @@ public class LimeLight extends SubsystemBase {
     NetworkTableEntry yOffsetEntry;
     NetworkTableEntry areaEntry;
     NetworkTableEntry poseAmbiguityEntry;
+    NetworkTableEntry validTargetEntry;
     public LimeLight(String name) {
         this.name = name;
         table = NetworkTableInstance.getDefault().getTable(name);
@@ -30,6 +31,7 @@ public class LimeLight extends SubsystemBase {
         yOffsetEntry = table.getEntry("ty");
         areaEntry = table.getEntry("ta");
         poseAmbiguityEntry = table.getEntry("pa");
+        validTargetEntry = table.getEntry("tv");
     }
 
     public String getName() {
@@ -51,9 +53,9 @@ public class LimeLight extends SubsystemBase {
     public double getPoseAmbiguity() {
         return poseAmbiguityEntry.getDouble(-1);
     }
-    
-    public double[] getCrosshairHSV() {
-        return LimeLightHelpers.getTargetColor(this.name);
+
+    public double hasValidTarget() {
+        return validTargetEntry.getDouble(0.0);
     }
 
     public void robotInit() {
@@ -64,12 +66,7 @@ public class LimeLight extends SubsystemBase {
     
     @Override
     public void periodic() {
-        double[] currentHSV = getCrosshairHSV();
-        SmartDashboard.putNumber("Crosshair Hue", currentHSV[0] * 180);
-        SmartDashboard.putNumber("Crosshair Saturation", currentHSV[1] * 255);
-        SmartDashboard.putNumber("Crosshair Value", currentHSV[2] * 255);
-        if (currentHSV[0] * 180  >= VisionConstants.HSVRange[0][0] && currentHSV[0] * 180 <= VisionConstants.HSVRange[1][0] && currentHSV[1] * 255 >= VisionConstants.HSVRange[0][1] && currentHSV[1]  * 255 <= VisionConstants.HSVRange[1][1] && currentHSV[2] * 255 >= VisionConstants.HSVRange[0][2] && currentHSV[2] * 255 <= VisionConstants.HSVRange[1][2]) {
-            System.out.println("YAYAY");
-        }
+        boolean targetValidity = hasValidTarget() == 1;
+        SmartDashboard.putBoolean("Valid Target", targetValidity);
     }    
 }
