@@ -54,8 +54,8 @@ public class LimeLight extends SubsystemBase {
         return poseAmbiguityEntry.getDouble(-1);
     }
 
-    public double hasValidTarget() {
-        return validTargetEntry.getDouble(0.0);
+    public boolean hasValidTarget() {
+        return validTargetEntry.getDouble(0.0) == 1;
     }
 
     public void robotInit() {
@@ -66,7 +66,7 @@ public class LimeLight extends SubsystemBase {
     
     @Override
     public void periodic() {
-        boolean targetValidity = hasValidTarget() == 1;
+        boolean targetValidity = hasValidTarget();
         SmartDashboard.putBoolean("Valid Target", targetValidity);
     }    
 }
