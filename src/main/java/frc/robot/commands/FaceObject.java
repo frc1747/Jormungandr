@@ -4,7 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimeLight;
 
@@ -29,10 +32,10 @@ public class FaceObject extends Command {
   @Override
   public void execute() {
       boolean targetValidity = this.limelight.hasValidTarget();
-      if (targetValidity) {
-        // to have something. YAY!
-      }
-  }
+      if (!targetValidity) {return;}
+      double xOffset = this.limelight.getXOffset() * 2 / Constants.VisionConstants.FOV_HORIZONTAL;
+      this.drivetrain.simpleDrive(new Translation2d(), Constants.DrivetrainConstants.maxAngularVelocity*xOffset);
+  } 
 
   // Called once the command ends or is interrupted.
   @Override
