@@ -29,7 +29,8 @@ public class GoToPose2d extends Command {
   public GoToPose2d(PoseEstimatorSubsystem poseEstimator, Drivetrain drivetrain, Pose2d desiredPose) {
     this.poseEstimator = poseEstimator;
     this.drivetrain = drivetrain;
-    // the pose we want to end up at
+    // the pose we want to end up at+
+    
     this.desiredPose = desiredPose;
     this.transPid = new PIDController(0.5, 0.0001, 0.0);
     this.rotPid = new PIDController(0.5, 0.0001, 0.0);

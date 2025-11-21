@@ -208,7 +208,7 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-
+    public static final double FOV_HORIZONTAL = 62.5;
   }
 
   public static class AutoConstants {

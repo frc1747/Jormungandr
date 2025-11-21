@@ -2,8 +2,14 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimeLightHelpers;
+import frc.robot.Constants.VisionConstants;
+
+import javax.sound.midi.SysexMessage;
+
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -17,7 +23,7 @@ public class LimeLight extends SubsystemBase {
     NetworkTableEntry yOffsetEntry;
     NetworkTableEntry areaEntry;
     NetworkTableEntry poseAmbiguityEntry;
-
+    NetworkTableEntry validTargetEntry;
     public LimeLight(String name) {
         this.name = name;
         table = NetworkTableInstance.getDefault().getTable(name);
@@ -25,6 +31,7 @@ public class LimeLight extends SubsystemBase {
         yOffsetEntry = table.getEntry("ty");
         areaEntry = table.getEntry("ta");
         poseAmbiguityEntry = table.getEntry("pa");
+        validTargetEntry = table.getEntry("tv");
     }
 
     public String getName() {
@@ -47,10 +54,19 @@ public class LimeLight extends SubsystemBase {
         return poseAmbiguityEntry.getDouble(-1);
     }
 
+    public boolean hasValidTarget() {
+        return validTargetEntry.getDouble(0.0) == 1;
+    }
+
     public void robotInit() {
       for (int port = 5800; port <= 5809; port ++) {
         PortForwarder.add(port+10, "limelight.local", port);
       }
     }
     
+    @Override
+    public void periodic() {
+        boolean targetValidity = hasValidTarget();
+        SmartDashboard.putBoolean("Valid Target", targetValidity);
+    }    
 }
