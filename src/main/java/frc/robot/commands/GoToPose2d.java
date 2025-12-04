@@ -4,6 +4,13 @@
 
 package frc.robot.commands;
 
+import java.util.List;
+
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -43,35 +50,12 @@ public class GoToPose2d extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // transform2d that represents difference between current estimated pose and desired pose
-    difference = poseEstimator.getEstimatedPose().relativeTo(desiredPose);
-    System.out.println(difference);
-    
-    // distance to desired pose translation in meters
-    
-    //diffTransMagnitude = Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2));
 
-    // distance to desired pose angle in radians
-    //diffAngle = difference.getRotation().getRadians();
-    
-    // velocityMultiplier [0, 1] tells robot how quickly to move towards desired pose translation
-   // double velocityMultiplier = diffTransMagnitude / 3; // starts slowing down within 3 meters
-   // if (velocityMultiplier > 1) velocityMultiplier = 1;
+    drivetrain.driveToPose(desiredPose).execute();
 
-    // angularVelocityMultiplier [-1, 1] tells robot how quickly to move towards desired pose rotation
-    //double angularVelocityMultiplier = diffAngle / (Math.PI / 4); // starts slowing down within pi/4 radians
-    //if (angularVelocityMultiplier > 1) angularVelocityMultiplier = 1;
-    //if (angularVelocityMultiplier < -1) angularVelocityMultiplier = -1;
 
-    // full speed translation in the direction of the desired pose translation
-    // Translation2d driveTranslation;
-    // if (difference.getX() >= 0) {
-    //   driveTranslation = new Translation2d(1, new Rotation2d(-Math.atan(difference.getY()/difference.getX())));
-    // } else {
-    //   driveTranslation = new Translation2d(1, new Rotation2d(Math.atan(difference.getY()/difference.getX())));
-    // }
 
-    drivetrain.simpleDrive(difference.getTranslation(), poseEstimator.getEstimatedPose().getRotation().getDegrees());
+
   }
  
   // Called once the command ends or is interrupted.
