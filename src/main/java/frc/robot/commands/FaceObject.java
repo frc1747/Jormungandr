@@ -35,11 +35,15 @@ public class FaceObject extends Command {
       if (!targetValidity) {return;}
       double xOffset = this.limelight.getXOffset() * 2 / Constants.VisionConstants.FOV_HORIZONTAL;
       this.drivetrain.simpleDrive(new Translation2d(), Constants.DrivetrainConstants.maxAngularVelocity*xOffset);
+      System.out.println("FaceObject Running");
   } 
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // stop drivetrain when command ends
+    this.drivetrain.simpleDrive(new Translation2d(0, 0), 0);
+  }
 
   // Returns true when the command should end.
   @Override

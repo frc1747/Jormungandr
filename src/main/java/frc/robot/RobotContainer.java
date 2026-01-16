@@ -239,7 +239,7 @@ public class RobotContainer {
       .whileTrue(new GoToPose2d(poseEstimator, drivetrain, new Pose2d(new Translation2d(7.67, 4.06), new Rotation2d(-3.13))));
 
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-      .toggleOnTrue(new FaceObject(limeLight, drivetrain));
+      .whileTrue(new FaceObject(limeLight, drivetrain));
 
     // new JoystickButton(driver, XboxController.Button.kA.value)
     //   .whileTrue(new Test());
