@@ -32,10 +32,16 @@ public class FaceObject extends Command {
   @Override
   public void execute() {
       boolean targetValidity = this.limelight.hasValidTarget();
-      if (!targetValidity) {return;}
+      if (!targetValidity) {
+        
+        this.drivetrain.simpleDrive(new Translation2d(0, 0), 0);
+        System.out.println("Target Not Detected");
+        return;
+      }
+      System.out.println("Target Detected");
       double xOffset = this.limelight.getXOffset() * 2 / Constants.VisionConstants.FOV_HORIZONTAL;
-      this.drivetrain.simpleDrive(new Translation2d(), Constants.DrivetrainConstants.maxAngularVelocity*xOffset);
-      System.out.println("FaceObject Running");
+      // this.drivetrain.simpleDrive(new Translation2d(), -0.1 * Constants.DrivetrainConstants.maxAngularVelocity*xOffset);
+      this.drivetrain.simpleDrive(new Translation2d(0, 0.2 * Constants.DrivetrainConstants.MAX_SPEED*xOffset), 0);
   } 
 
   // Called once the command ends or is interrupted.
