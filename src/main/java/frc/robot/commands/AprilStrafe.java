@@ -12,12 +12,12 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimeLight;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class FaceObject extends Command {
+public class AprilStrafe extends Command {
   /** Creates a new FaceObject. */
   LimeLight limelight;
   Drivetrain drivetrain;
 
-  public FaceObject(LimeLight limeLight, Drivetrain drivetrain) {
+  public AprilStrafe(LimeLight limeLight, Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.limelight = limeLight;
     this.drivetrain = drivetrain;
