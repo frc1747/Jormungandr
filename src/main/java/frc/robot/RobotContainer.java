@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.AdjustNote;
 import frc.robot.commands.AprilLock;
+import frc.robot.commands.AprilLock2;
 import frc.robot.commands.AprilStrafe;
 import frc.robot.commands.GoToPose2d;
 import frc.robot.commands.Teleop.CleanIntake;
@@ -240,8 +241,9 @@ public class RobotContainer {
       .whileTrue(new GoToPose2d(poseEstimator, drivetrain, new Pose2d(new Translation2d(7.67, 4.06), new Rotation2d(-3.13))));
 
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-      .whileTrue(new AprilLock(
+      .whileTrue(new AprilLock2(
         limeLight, 
+        poseEstimator,
         drivetrain, 
         () -> -driver.getRawAxis(translationAxis), 
         () -> -driver.getRawAxis(strafeAxis)));
