@@ -30,7 +30,7 @@ public final class Constants {
     public static final double STICK_DEADBAND = 0.05;// was .1
   }
 
-  public static class IntakeConstants {
+   public static class IntakeConstants {
     public static final int ROLLER_ONE = 41;
     public static final int ROLLER_TWO = 42;
     public static final int HINGE = 43;
@@ -68,32 +68,14 @@ public final class Constants {
     public static final double AMP = 97500*4;
     public static final double PODIUM = 68000;
 
-    public static final double SHOOT_SPEED = 1;
+    public static final double SHOOT_SPEED = 0.5;
     
     public static final double HINGE_SPEED = 1;
 
     public static final double FLYWHEEL_HIGH_SPEED = -16500;
 
     public static final double DOWN_LIMIT = STOWED;
-    public static final double UP_LIMIT = 100000*4;
-  }
-
-  public static class FeederConstants {
-      public static final int BACK = 53;
-      public static final double TRANSITION_SPEED = 0.70;
-      public static final double ADJUST_NOTE_SPEED = 0.40;
-      public static final int LIMIT_SWITCH = 1;
-      public static final int ADJUST_NOTE_MILLIS = 50;
-  }
-
-  public static class ClimberConstants {
-    public static final int LEFT = 61;
-    public static final int RIGHT = 62;
-
-    public static final double CLIMBER_SPEED = 0.75;
-    public static final double UP_LIMIT = 275000;
-
-    public static final double SLOW_LIMIT = 50000;
+    public static final double UP_LIMIT = 100000*4.05;
   }
   
   public static class DrivetrainConstants {
@@ -150,8 +132,8 @@ public final class Constants {
     public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
     // TODO: Tune these later
-    public static final double MAX_SPEED = 4.1;  // Max speed in m/s
-    public static final double MAX_ACCEL = 4.1;  // Max acceleration in m/s
+    public static final double MAX_SPEED = 1.025;  // Max speed in m/s
+    public static final double MAX_ACCEL = 1.025;  // Max acceleration in m/s
     public static final double maxAngularVelocity = 10.0;  // Rad/s
 
     // TODO: Tune these later
