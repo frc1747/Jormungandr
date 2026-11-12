@@ -129,11 +129,7 @@ public class RobotContainer {
     Toggle = false; 
     drivetrain.setDefaultCommand(
       new TeleopSwerve(
-        drivetrain, 
-        () -> -driver.getRawAxis(translationAxis), 
-        () -> -driver.getRawAxis(strafeAxis), 
-        () -> -driver.getRawAxis(rotationAxis), 
-        () -> robotCentric.getAsBoolean()
+        
       )
     );
     pIntake.setDefaultCommand(
