@@ -129,9 +129,20 @@ public class RobotContainer {
     Toggle = false; 
     drivetrain.setDefaultCommand(
       new TeleopSwerve(
-        
+        drivetrain,
+        //find what driver_hid should be
+        () -> driver.getRawAxis(translationAxis),
+        () -> driver.getRawAxis(strafeAxis),
+        () -> driver.getRawAxis(rotationAxis),
+        () -> robotCentric.getAsBoolean()
+        //() -> robotCentricSup.getBoolean(),
+        //5 arguments (drivetrain is one, line 132);
+        //whats going on
       )
+      //  -> constructs a supplier
+      //runs to get a value
     );
+    
     pIntake.setDefaultCommand(
       new intakeMove(pIntake, intakeMovement));
     
@@ -144,9 +155,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("stow", new StowIntake(intake, pIntake));
 // imports needed 
     NamedCommands.registerCommand("shoot", new ShootAuto(shooter, intake,feeder , "shoot"));
-
-    
-      // Configure the trigger bindings
+//SPEEDWAGOOOOOOOOON   ...    Iced teas, four of them!
     configureBindings();
 
     // autos
